@@ -1,0 +1,37 @@
+{% extends 'transaction/base.html' %}
+
+{% block content %}
+
+{% if pk == 2 %}
+    <h1>Средняя цена, общее количество, общий расход и скорость расхода на все товары / услуги:</h1>
+    {% for item in queryset %}
+        <p><b>{{ item.name }}</b> ({{ item.categories }}): расход: <b>{{ item.totalexp }}</b> руб., кол-во: <b>{{ item.totalquant | floatformat:2 }}</b> {{ item.meter }},
+            ср.цена: <b>{{ item.averpr | floatformat:2 }}</b> руб.за {{ item.meter }}, скорость расхода: <b>{{ item.speedexp | floatformat:2 }}</b> руб. в день,
+            потребление: <b>{{ item.consumptionrate | floatformat:2 }}</b> {{ item.meter }} в день </p>
+    {% endfor %}
+{% elif pk == 3 %}
+    <h1>Расчёт общего расхода, скорости расхода и доли от общих расходов по категориям товаров/услуг:</h1>
+    {% for item in queryset %}
+        <p><b>{{ item.categories }}</b>: общий расход: <b>{{ item.totalexp }}</b> руб.,
+            скорость расхода: <b>{{ item.speedexp | floatformat:2 }}</b> руб. в день, доля от общего расхода:
+            <b>{{ item.percentexp | floatformat:3 }}</b>%</p>
+    {% endfor %}
+{% elif pk == 4 %}
+    <h1>Расчёт общего дохода, скорости дохода и доли от общих доходов по типам поступлений в процентах:</h1>
+    {% for item in queryset %}
+        <p><b>{{ item.incometypes }}</b>: поступление: <b>{{ item.totalpro }}</b> руб.,
+            скорость дохода: <b>{{ item.speedpro | floatformat:2 }}</b> руб. в день, доля от общего дохода:
+            <b>{{ item.percentpro | floatformat:3 }}</b>%</p>
+    {% endfor %}
+{% elif pk == 5 %}
+    <h1>Расчёт общего дохода, скорости дохода и доли от общих доходов по поступлениям в процентах:</h1>
+    {% for item in queryset %}
+        <p><b>{{ item.name }}</b> ({{ item.incometypes }}): поступление: <b>{{ item.totalpro }}</b> руб.,
+            скорость дохода: <b>{{ item.speedpro | floatformat:2 }}</b> руб. в день, доля от общего дохода:
+            <b>{{ item.percentpro | floatformat:3 }}</b>%</p>
+    {% endfor %}
+{% endif %}
+{% endblock %}
+
+
+
