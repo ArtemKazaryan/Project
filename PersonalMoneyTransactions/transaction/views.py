@@ -230,11 +230,9 @@ def specialcostcalculation2(request):
         delta_days = [delta_date_pro, delta_date_exp]
         max_delta_days = max(delta_days)
 
-        print(max_delta_days)
         # Получение списков из queryset'ов
         valuespro_list = protransactions.values()
 
-        print(valuespro_list)
         sumamount = 0
         for item in valuespro_list:
             if item['name'] == input_name:
@@ -243,7 +241,6 @@ def specialcostcalculation2(request):
         input_name = request.POST.get('calculation2input')
         speedpro = round(sumamount / max_delta_days, 2)
         pk = 2
-        print(sumamount)
         context = {'input_name': input_name, 'speedpro': speedpro, 'pk': pk,
                    'sumamount': sumamount, 'multidash': multidash}
         return render(request, 'transaction/specialcalculation2.html', context)
