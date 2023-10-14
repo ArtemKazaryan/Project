@@ -31,6 +31,7 @@ urlpatterns = [
 
     path('special_cost_calculations/', views.transactions_special_cost_calculations, name='special_cost_calculations'),
     path('specialcalculation1/', views.specialcostcalculation1, name='specialcalculation1'),
+    path('specialcalculation2/', views.specialcostcalculation2, name='specialcalculation2'),
     path('specialcalculation/<int:pk>/', views.specialcostcalculation, name='specialcalculation'),
 
     path('recorded/', views.recordedtransactions, name='recorded'),

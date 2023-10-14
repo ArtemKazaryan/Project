@@ -4,6 +4,7 @@
 
 <ul>
     <li><a href="{% url 'specialcalculation1' %}">Средняя цена, общее количество, общий расход и скорость расхода на указанный товар/услугу</a></li>
+    <li><a href="{% url 'specialcalculation2' %}">Общий доход и скорость дохода на указанный источник дохода</a></li>
     {% for func in funcnames %}
     <li><a href="{% url 'specialcalculation' forloop.counter %}">{{ func }}</a></li>
     {% endfor %}

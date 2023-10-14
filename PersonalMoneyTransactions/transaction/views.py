@@ -203,10 +203,56 @@ def specialcostcalculation1(request):
     else:
         return render(request, 'transaction/specialcalculation1.html')
 
+@login_required
+def specialcostcalculation2(request):
+    # Эта переменная для пунктира
+    multidash = '- ' * 117
+    if request.method == 'POST':
+        input_name = request.POST.get('calculation2input')
 
+        protransactions = ProfitableTransaction.objects.all()
+
+        # Получаем минимальную дату из БД по доходам
+        oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
+        if not oldest_date_pro:
+            return 0
+        # Разница между текущей датой и самой старой датой
+        delta_date_pro = (date.today() - oldest_date_pro).days + 1
+
+        # Получаем минимальную дату из БД по расходам
+        oldest_date_exp = ExpenditureTransaction.objects.aggregate(Min('date'))['date__min']
+        if not oldest_date_exp:
+            return 0
+        # Разница между текущей датой и самой старой датой
+        delta_date_exp = (date.today() - oldest_date_exp).days + 1
+
+        # Находим общий срок ведения учёта
+        delta_days = [delta_date_pro, delta_date_exp]
+        max_delta_days = max(delta_days)
+
+        print(max_delta_days)
+        # Получение списков из queryset'ов
+        valuespro_list = protransactions.values()
+
+        print(valuespro_list)
+        sumamount = 0
+        for item in valuespro_list:
+            if item['name'] == input_name:
+                value = round(item['amount'], 2)
+                sumamount += value
+        input_name = request.POST.get('calculation2input')
+        speedpro = round(sumamount / max_delta_days, 2)
+        pk = 2
+        print(sumamount)
+        context = {'input_name': input_name, 'speedpro': speedpro, 'pk': pk,
+                   'sumamount': sumamount, 'multidash': multidash}
+        return render(request, 'transaction/specialcalculation2.html', context)
+    else:
+        return render(request, 'transaction/specialcalculation2.html')
 
 @login_required
 def specialcostcalculation(request, pk):
+    pk = str(int(pk) + 1)
 
     multidash = '- ' * 117
     # Получаем минимальную дату из БД по доходам

@@ -1,0 +1,20 @@
+{% extends 'transaction/base.html' %}
+
+{% block content %}
+
+<h1>Расчёт средней цены, общего количества, общего расхода и скорости расхода на указанный товар/услугу:</h1>
+<form method="POST" action="{% url 'specialcalculation2' %}">
+  {% csrf_token %}
+  <label for="calculation2input">Наименование дохода:</label>
+  <input type="text" name="calculation2input">
+  <button type="submit">Получить</button>
+</form>
+<h1></h1>
+{{ multidash }}
+{{ error }}
+{% if input_name %}
+<p><b>{{ input_name }}</b> ( ДОХОД: <b>{{ sumamount }}</b> руб., СКОРОСТЬ ДОХОДА: <b>{{ speedpro }}</b> руб. в день )</p>
+{% endif %}
+
+{{ multidash }}
+{% endblock %}

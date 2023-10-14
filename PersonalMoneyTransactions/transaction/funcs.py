@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 
 
 def func2(request, maxdeltadays, sumpro, sumexp, multidash):
-    pk = 2
+    pk = 3
     queryset = ExpenditureTransaction.objects.values('name').annotate(totalexp=Sum(F('quantity') * F('price')),
                                                                       averpr=Sum(F('quantity') * F('price')) / Sum('quantity'),
                                                                       totalquant=Sum('quantity'), meter=F('meter__name'),
@@ -20,7 +20,7 @@ def func2(request, maxdeltadays, sumpro, sumexp, multidash):
 
 
 def func3(request, maxdeltadays, sumpro, sumexp, multidash):
-    pk = 3
+    pk = 4
     queryset = ExpenditureTransaction.objects.values('category').annotate(totalexp=Sum(F('quantity') * F('price')),
                                                                           categories=F('category__name')).order_by()
     for item in queryset:
@@ -31,7 +31,7 @@ def func3(request, maxdeltadays, sumpro, sumexp, multidash):
 
 
 def func4(request, maxdeltadays, sumpro, sumexp, multidash):
-    pk = 4
+    pk = 5
     queryset = ProfitableTransaction.objects.values('incometype').annotate(totalpro=Sum(F('amount')),
                                                                            incometypes=F('incometype__name')).order_by()
     for item in queryset:
@@ -42,7 +42,7 @@ def func4(request, maxdeltadays, sumpro, sumexp, multidash):
 
 
 def func5(request, maxdeltadays, sumpro, sumexp, multidash):
-    pk = 5
+    pk = 6
     queryset = ProfitableTransaction.objects.values('name').annotate(totalpro=Sum(F('amount')),
                                                                      incometypes=F('incometype__name')).order_by()
     for item in queryset:
@@ -51,7 +51,7 @@ def func5(request, maxdeltadays, sumpro, sumexp, multidash):
     context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
 
-funcs = ['', func2, func3, func4, func5]
+funcs = ['', '', func2, func3, func4, func5]
 
 
 
