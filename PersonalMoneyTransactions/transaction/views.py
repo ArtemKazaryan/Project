@@ -10,7 +10,7 @@ from django.db.models import Min, Sum, F, Avg
 from datetime import date
 from math import floor
 from .funcs import funcs
-
+from django.core.paginator import Paginator
 
 def home(request):
     return render(request, 'transaction/home.html')
@@ -144,10 +144,10 @@ def recordedtransactions(request):
 @login_required
 def transactions_special_cost_calculations(request):
     custom_range = range(0, 4)
-    funcnames = ['Средняя цена, общее количество, общий расход и скорость расхода на все товары / услуги',
-                 'Расчёт общего расхода, скорости расхода и доли от общих расходов по категориям товаров / услуг',
-                 'Расчёт общего дохода, скорости дохода и доли от общих доходов по типам поступлений в процентах',
-                 'Расчёт общего дохода, скорости дохода и доли от общих доходов по поступлениям в процентах']
+    funcnames = ['3. Средняя цена, общее количество, общий расход и скорость расхода на все товары / услуги',
+                 '4. Расчёт общего расхода, скорости расхода и доли от общих расходов по категориям товаров / услуг',
+                 '5. Расчёт общего дохода, скорости дохода и доли от общих доходов по типам поступлений в процентах',
+                 '6. Расчёт общего дохода, скорости дохода и доли от общих доходов по поступлениям в процентах']
 
     return render(request, 'transaction/special_cost_calculations.html', {'custom_range': custom_range,
                                                                           'funcnames': funcnames})

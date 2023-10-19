@@ -3,33 +3,91 @@
 {% block content %}
 
 {% if pk == 3 %}
-    <h1>Средняя цена, общее количество, общий расход и скорость расхода на все товары / услуги:</h1>
-    {% for item in queryset %}
-        <p><b>{{ item.name }}</b> ({{ item.categories }}): расход: <b>{{ item.totalexp }}</b> руб., кол-во: <b>{{ item.totalquant | floatformat:2 }}</b> {{ item.meter }},
-            ср.цена: <b>{{ item.averpr | floatformat:2 }}</b> руб.за {{ item.meter }}, скорость расхода: <b>{{ item.speedexp | floatformat:2 }}</b> руб. в день,
-            потребление: <b>{{ item.consumptionrate | floatformat:2 }}</b> {{ item.meter }} в день </p>
-    {% endfor %}
+    <h1>{{ pk }}. Средняя цена, общее количество, общий расход и скорость расхода на все товары / услуги:</h1>
+
+    <table>
+      <tr>
+        <th>Товар/услуга:</th>
+        <th>Категория:</th>
+        <th>Расход,руб.:</th>
+        <th>Количество:</th>
+        <th>Единица измерения:</th>
+        <th>Средняя цена:</th>
+        <th>Скорость расхода,руб.в день:</th>
+        <th>Потребление:</th>
+      </tr>
+        {% for item in queryset %}
+            <tr style="text-align: center;">
+              <td style="font-size: 20px;"><b>{{ item.name }}</b></td>
+              <td>{{ item.categories }}</td>
+              <td><b>{{ item.totalexp }}</b></td>
+              <td><b>{{ item.totalquant | floatformat:2 }}</b></td>
+              <td>{{ item.meter }}</td>
+              <td style="font-size: 10px;"><b style="font-size: 17px;">{{ item.averpr | floatformat:2 }}</b>руб.за {{ item.meter }}</td>
+              <td><b>{{ item.speedexp | floatformat:2 }}</b></td>
+              <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.consumptionrate | floatformat:2 }}</b> {{ item.meter }} в день</td>
+            </tr>
+        {% endfor %}
+    </table>
+
 {% elif pk == 4 %}
-    <h1>Расчёт общего расхода, скорости расхода и доли от общих расходов по категориям товаров/услуг:</h1>
-    {% for item in queryset %}
-        <p><b>{{ item.categories }}</b>: общий расход: <b>{{ item.totalexp }}</b> руб.,
-            скорость расхода: <b>{{ item.speedexp | floatformat:2 }}</b> руб. в день, доля от общего расхода:
-            <b>{{ item.percentexp | floatformat:3 }}</b>%</p>
-    {% endfor %}
+    <h1>{{ pk }}. Расчёт общего расхода, скорости расхода и доли от общих расходов по категориям товаров/услуг:</h1>
+
+        <table>
+      <tr>
+        <th>Категория:</th>
+        <th>Расход,руб.:</th>
+        <th>Скорость расхода,руб.в день:</th>
+        <th>Доля от общего расхода:</th>
+      </tr>
+        {% for item in queryset %}
+            <tr style="text-align: center;">
+              <td style="font-size: 20px;"><b>{{ item.categories }}</b></td>
+              <td><b>{{ item.totalexp }}</b></td>
+              <td><b>{{ item.speedexp | floatformat:2 }}</b></td>
+              <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.percentexp | floatformat:3 }}</b>%</td>
+            </tr>
+        {% endfor %}
+    </table>
+
 {% elif pk == 5 %}
-    <h1>Расчёт общего дохода, скорости дохода и доли от общих доходов по типам поступлений в процентах:</h1>
-    {% for item in queryset %}
-        <p><b>{{ item.incometypes }}</b>: поступление: <b>{{ item.totalpro }}</b> руб.,
-            скорость дохода: <b>{{ item.speedpro | floatformat:2 }}</b> руб. в день, доля от общего дохода:
-            <b>{{ item.percentpro | floatformat:3 }}</b>%</p>
-    {% endfor %}
+    <h1>{{ pk }}. Расчёт общего дохода, скорости дохода и доли от общих доходов по типам поступлений в процентах:</h1>
+    <table>
+      <tr>
+        <th>Категория:</th>
+        <th>Доход,руб.:</th>
+        <th>Скорость дохода,руб.в день:</th>
+        <th>Доля от общего дохода:</th>
+      </tr>
+        {% for item in queryset %}
+            <tr style="text-align: center;">
+              <td style="font-size: 20px;"><b>{{ item.incometypes }}</b></td>
+              <td><b>{{ item.totalpro }}</b></td>
+              <td><b>{{ item.speedpro | floatformat:2 }}</b></td>
+              <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.percentpro | floatformat:3 }}</b>%</td>
+            </tr>
+        {% endfor %}
+    </table>
+
 {% elif pk == 6 %}
-    <h1>Расчёт общего дохода, скорости дохода и доли от общих доходов по поступлениям в процентах:</h1>
-    {% for item in queryset %}
-        <p><b>{{ item.name }}</b> ({{ item.incometypes }}): поступление: <b>{{ item.totalpro }}</b> руб.,
-            скорость дохода: <b>{{ item.speedpro | floatformat:2 }}</b> руб. в день, доля от общего дохода:
-            <b>{{ item.percentpro | floatformat:3 }}</b>%</p>
-    {% endfor %}
+    <h1>{{ pk }}. Расчёт общего дохода, скорости дохода и доли от общих доходов по поступлениям в процентах:</h1>
+    <table>
+      <tr>
+        <th>Наименование:</th>
+        <th>Доход,руб.:</th>
+        <th>Скорость дохода,руб.в день:</th>
+        <th>Доля от общего дохода:</th>
+      </tr>
+        {% for item in queryset %}
+            <tr style="text-align: center;">
+              <td style="font-size: 20px;"><b>{{ item.name }}</b> <b style="font-size: 15px;">({{ item.incometypes }})</b></td>
+              <td><b>{{ item.totalpro }}</b></td>
+              <td><b>{{ item.speedpro | floatformat:2 }}</b></td>
+              <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.percentpro | floatformat:3 }}</b>%</td>
+            </tr>
+        {% endfor %}
+    </table>
+
 {% endif %}
 {% endblock %}
 

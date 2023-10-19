@@ -25,7 +25,7 @@ def func3(request, maxdeltadays, sumpro, sumexp, multidash):
                                                                           categories=F('category__name')).order_by()
     for item in queryset:
         item['speedexp'] = item['totalexp'] / maxdeltadays
-        item['percentexp'] = round(100 * item['totalexp'] / sumexp, 0)
+        item['percentexp'] = round(100 * item['totalexp'] / sumexp, 3)
     context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
 
@@ -36,9 +36,11 @@ def func4(request, maxdeltadays, sumpro, sumexp, multidash):
                                                                            incometypes=F('incometype__name')).order_by()
     for item in queryset:
         item['speedpro'] = item['totalpro'] / maxdeltadays
-        item['percentpro'] = round(100 * item['totalpro'] / sumpro, 0)
+        item['percentpro'] = round(100 * item['totalpro'] / sumpro, 3)
     context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
+
+
 
 
 def func5(request, maxdeltadays, sumpro, sumexp, multidash):
@@ -47,7 +49,8 @@ def func5(request, maxdeltadays, sumpro, sumexp, multidash):
                                                                      incometypes=F('incometype__name')).order_by()
     for item in queryset:
         item['speedpro'] = item['totalpro'] / maxdeltadays
-        item['percentpro'] = round(100 * item['totalpro'] / sumpro, 0)
+        item['percentpro'] = round(100 * item['totalpro'] / sumpro, 3)
+
     context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
 
