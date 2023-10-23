@@ -1,16 +1,38 @@
+# Импортируем функции рендеринга, перенапрвления и получения объекта модели из пакета функций быстрого доступа
 from django.shortcuts import render, redirect, get_object_or_404
+
+# Импортируем стандартные формы создания пользователя и его аутентификации из подпакета forms пакета auth
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+
+# Импортируем стандартную модель пользователя из подпакета models пакета auth
 from django.contrib.auth.models import User
+
+# Импортируем функции создания пользователя и его аутентификации из пакета auth
 from django.contrib.auth import login, logout, authenticate
+
+# Импортируем функцию отслеживания ошибки целостности при взаимодействии с БД
 from django.db import IntegrityError
+
+# Импортируем формы отображения для ввода данных в наши модели из файла forms.py
 from .forms import ProfitableTransactionForm, ExpenditureTransactionForm
+
+# Импортируем наши модели, взаимодействующие с базой данных из файла models.py
 from .models import ProfitableTransaction, ExpenditureTransaction, Meter
+
+# Импортируем стандартную функцию-декоратор, отслеживающую выполнения требования входа пользователя в систему
 from django.contrib.auth.decorators import login_required
+
+# Импортируем стандартные арифметические функции для работы с моделью при вычислениях на основе данных из БД
 from django.db.models import Min, Sum, F, Avg
+
+# Импортируем функцию даты из стандартного пакета datetime и функцию округления до меньшего целого
+# из стандартного пакета math
 from datetime import date
 from math import floor
+
+# Импортируем список наших функций из файла funcs.py
 from .funcs import funcs
-from django.core.paginator import Paginator
+
 
 def home(request):
     return render(request, 'transaction/home.html')
