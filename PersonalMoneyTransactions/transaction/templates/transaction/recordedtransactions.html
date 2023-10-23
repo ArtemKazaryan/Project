@@ -5,8 +5,11 @@
 <h3>Сегодня: {{ today }}  </h3>
 
 <p>Дата первых учётных данных: {{ oldest_of_oldest_dates }}</p>
-<p>Общий срок учёта (кол-во дней): {{ max_delta_days }}</p>
-<h2 style="color: black">Запас будет исчерпан за {{ days_left }} дн.</h2>
+<p>Общий срок учёта: {{ max_delta_days }} дн.</p>
+<h2 style="color: black">Текущий темп расходов=<b style="color: red">{{ total_expense_rate }}руб/день</b>  исчерпает
+    запас=<b style="color: orange">{{ total_balance }}руб.</b> за
+    срок=<b style="color: green; font-size: 30px;">{{ days_left }}</b><b style="color: green;">дн.</b></h2>
+
 {{ multidash }}
 <h1 style="color: green">Доходы:</h1>
 <ul style="color: green">

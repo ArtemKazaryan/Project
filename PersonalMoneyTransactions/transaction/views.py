@@ -139,9 +139,10 @@ def recordedtransactions(request):
     # Вычисляем скорости доходов и затрат
     total_revenue_rate = round(sumpro / max_delta_days, 2)
     total_expense_rate = round(sumexp / max_delta_days, 2)
+    term = floor(total_balance / total_expense_rate)
 
     # Вычисляем оставшиеся дни
-    days_left = f'{floor(total_balance / total_expense_rate)} - {floor(total_balance / total_expense_rate) + 1}'
+    days_left = f'{term}'
 
     # Вычисляем скорость прибыли
     margin_total_rate = total_revenue_rate - total_expense_rate
