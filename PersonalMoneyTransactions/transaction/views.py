@@ -153,15 +153,81 @@ def recordedtransactions(request):
     # Эта переменная для пунктира
     multidash = '- ' * 117
 
-    # Формируем контекст вывода на страницу
-    context = {'protransactions': protransactions, 'exptransactions': exptransactions,
-               'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
-               'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
-               'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
-               'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
-               'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash': multidash}
+    if request.method == 'POST':
+        startday = request.POST.get('startday')
+        startmonth = request.POST.get('startmonth')
+        startyear = request.POST.get('startyear')
+        finishday = request.POST.get('finishday')
+        finishmonth = request.POST.get('finishmonth')
+        finishyear = request.POST.get('finishyear')
 
-    return render(request, 'transaction/recordedtransactions.html', context)
+        if startday == '' or startmonth == '' or startyear == '' or \
+                finishday == '' or finishmonth == '' or finishyear == '':
+
+            countfiltpro = protransactions.count
+            countfiltexp = exptransactions.count
+            if not countfiltpro:
+                countfiltpro = 0
+            if not countfiltexp:
+                countfiltexp = 0
+
+            # Формируем контекст вывода на страницу
+            context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+                       'startday': startday, 'startmonth': startmonth, 'startyear': startyear,
+                       'finishday': finishday, 'finishmonth': finishmonth, 'finishyear': finishyear,
+                       'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp,
+                       'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
+                       'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
+                       'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
+                       'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
+                       'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash': multidash}
+            return render(request, 'transaction/recordedtransactions.html', context)
+
+        else:
+
+            protransactions = ProfitableTransaction.objects.filter(date__range=[f"{startyear}-{startmonth}-{startday}",
+                                                                                f"{finishyear}-{finishmonth}-{finishday}"
+                                                                                ]).order_by('-date')
+
+            exptransactions = ExpenditureTransaction.objects.filter(date__range=[f"{startyear}-{startmonth}-{startday}",
+                                                                                 f"{finishyear}-{finishmonth}-{finishday}"
+                                                                                 ]).order_by('-date')
+            countfiltpro = protransactions.count
+            countfiltexp = exptransactions.count
+            if not countfiltpro:
+                countfiltpro = 0
+            if not countfiltexp:
+                countfiltexp = 0
+
+            # Формируем контекст вывода на страницу
+            context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+                       'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp,
+                       'startday': startday, 'startmonth': startmonth, 'startyear': startyear,
+                       'finishday': finishday, 'finishmonth': finishmonth, 'finishyear': finishyear,
+                       'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
+                       'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
+                       'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
+                       'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
+                       'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash': multidash}
+            return render(request, 'transaction/recordedtransactions.html', context)
+
+    else:
+        countfiltpro = protransactions.count
+        countfiltexp = exptransactions.count
+        if not countfiltpro:
+            countfiltpro = 0
+        if not countfiltexp:
+            countfiltexp = 0
+        # Формируем контекст вывода на страницу
+        context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+                   'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp,
+                   'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
+                   'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
+                   'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
+                   'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
+                   'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash': multidash}
+        return render(request, 'transaction/recordedtransactions.html', context)
+
 
 
 @login_required
