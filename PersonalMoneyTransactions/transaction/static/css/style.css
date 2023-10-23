@@ -14,6 +14,7 @@ body{
 .menu{
     background: #006666;
     box-shadow: 0 2px 12px 2px #006666;
+    align-items: center;
 }
 
 ul{
@@ -107,7 +108,7 @@ input{
 .content a{
     color: #000;
     display: block;
-    padding: 20px;
+    padding: 10px;
     box-sizing: border-box;
 }
 

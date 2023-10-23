@@ -2,82 +2,93 @@
 
 {% block content %}
 
-<h3>Сегодня: {{ today }}  </h3>
+    <form class="bg" method="get" style="font-size: 12px; width: 880px;">
+        <h3>Сегодня: {{ today }}</h3>
+        <p>Дата первых учётных данных: {{ oldest_of_oldest_dates }}</p>
+        <p>Общий срок учёта: {{ max_delta_days }} дн.</p>
+        {{ multidash2 }}
+        <h2 style="color: green">Общий доход: {{ sumpro }} руб.</h2>
+        <h3 style="color: green">Среднесуточная скорость общего дохода: {{ total_revenue_rate }} руб. в день</h3>
+        <p style="color: green">(общее число записей: {{ countpro }})</p>
+        {{ multidash2 }}
+        <h2 style="color: red">Общий расход: {{ sumexp }} руб.</h2>
+        <h3 style="color: red">Среднесуточная скорость общего расхода: {{ total_expense_rate }} руб. в день</h3>
+        <p style="color: red">(общее число записей: {{ countexp }})</p>
+        {{ multidash2}}
+        <h2 style="color: orange">Текущая общая прибыль (баланс, запас): {{ total_balance }} руб.</h2>
+        <h3 style="color: orange">Среднесуточная скорость текущей общей прибыли: {{ margin_total_rate }} руб. в день</h3>
+        {{ multidash2 }}
+        <h2 style="color: black">Текущий темп расходов=<b style="color: red">{{ total_expense_rate }}руб/день</b>  исчерпает
+            запас=<b style="color: orange">{{ total_balance }}руб.</b> за
+            срок=<b style="color: green; font-size: 20px;">{{ days_left }}</b><b style="color: green;">дн.</b></h2>
+    </form>
 
-<p>Дата первых учётных данных: {{ oldest_of_oldest_dates }}</p>
-<p>Общий срок учёта: {{ max_delta_days }} дн.</p>
-{{ multidash }}
-<h2 style="color: green">Общий доход: {{ sumpro }} руб.</h2>
-<h3 style="color: green">Среднесуточная скорость общего дохода: {{ total_revenue_rate }} руб. в день</h3>
-<p style="color: green">(общее число записей: {{ countpro }})</p>
-{{ multidash }}
-<h2 style="color: red">Общий расход: {{ sumexp }} руб.</h2>
-<h3 style="color: red">Среднесуточная скорость общего расхода: {{ total_expense_rate }} руб. в день</h3>
-<p style="color: red">(общее число записей: {{ countexp }})</p>
-{{ multidash }}
-<h2 style="color: orange">Текущая общая прибыль (баланс, запас): {{ total_balance }} руб.</h2>
-<h3 style="color: orange">Среднесуточная скорость текущей общей прибыли: {{ margin_total_rate }} руб. в день</h3>
-{{ multidash }}
-<h2 style="color: black">Текущий темп расходов=<b style="color: red">{{ total_expense_rate }}руб/день</b>  исчерпает
-    запас=<b style="color: orange">{{ total_balance }}руб.</b> за
-    срок=<b style="color: green; font-size: 30px;">{{ days_left }}</b><b style="color: green;">дн.</b></h2>
-{{ multidash }}
-<h1>Фильтр:</h1>
-<form method="POST" action="{% url 'recorded' %}">
-    <h3>Начальная дата:</h3>
-  {% csrf_token %}
-  <label for="startday">День (дд)</label>
-  <input type="text" name="startday">
-    <label for="startmonth">Месяц (мм)</label>
-  <input type="text" name="startmonth">
-    <label for="startyear">Год (гггг)</label>
-  <input type="text" name="startyear">
-    <h3>Конечная дата:</h3>
-  <label for="finishday">День (дд)</label>
-  <input type="text" name="finishday">
-    <label for="finishmonth">Месяц (мм)</label>
-  <input type="text" name="finishmonth">
-    <label for="finishyear">Год (гггг)</label>
-  <input type="text" name="finishyear">
-  <button type="submit">Показать отфильтрованные проводки </button>
-</form>
-{{ multidash }}
-<h2 style="color: green">Проводки по доходам:</h2>
-<p style="color: green">(за период с {{ startday }}.{{startmonth}}.{{startyear}} по {{ finishday }}.{{finishmonth}}.{{finishyear}}
-    найдено записей: {{ countfiltpro }})</p>
-<ul style="color: green">
-    {% for protransaction in protransactions %}
-    <li>
-        <a style="color: green" href="{% url 'viewprotransaction' protransaction.id %}">
-            {{ protransaction.date }} - {{ protransaction.name }}: {{ protransaction.description }}
-            ({{ protransaction.incometype.first }}) :
-            <b style="color: green">
-                {{ protransaction.amount }} руб.
-            </b>
-        </a>
-    </li>
-    {% endfor %}
-</ul>
 
-{{ multidash }}
+    <form class="bg" method="POST" action="{% url 'recorded' %}" style="width: 880px;">
+        <h1>Фильтр проводок за период:</h1>
+        {% csrf_token %}
+        <label for="start">Начальная дата:</label>
+        <input type="date" id="start" name="trip-start" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
+               style="color: black; font-size: 20px; width: 180px;"/>
+        <p></p>
+        <label for="finish">Конечная дата:</label>
+        <input type="date" id="finish" name="trip-finish" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
+               style="color: black; font-size: 20px; width: 180px;"/>
+        <p></p>
+        <button class="btn" type="submit">Отфильтровать</button>
 
-<h2 style="color: red">Проводки по расходам:</h2>
-<p style="color: red">(за период с {{ startday }}.{{startmonth}}.{{startyear}} по {{ finishday }}.{{finishmonth}}.{{finishyear}}
-    найдено записей: {{ countfiltexp }})</p>
-<ul style="color: red">
+        <p>{{ multidash1 }}</p>
 
-    {% for exptransaction in exptransactions %}
-    <li>
-        <a style="color: red" href="{% url 'viewexptransaction' exptransaction.id %}">
-            {{ exptransaction.date }} - {{ exptransaction.name }} {{ exptransaction.description }}
-            ({{ exptransaction.category.first }}): {{ exptransaction.quantity }} {{ exptransaction.meter.first }} за
-            <b>
-                 {{ exptransaction.total_cost }} руб.
-            </b>
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+        <h2 style="color: green">Проводки по доходам:</h2>
 
-<p>{{ multidash }}</p>
+        {% if notempty %}
+        <p style="color: green">(за период с {{ startday }}.{{startmonth}}.{{startyear}} по {{ finishday }}.{{finishmonth}}.{{finishyear}}
+            найдено записей: {{ countfiltpro }})</p>
+        {% else %}
+        <p style="color: green">(за период с {{ today }} по {{ oldest_of_oldest_dates }}
+            найдено записей: {{ countfiltpro }})</p>
+        {% endif %}
+
+        <ul style="color: green">
+            {% for protransaction in protransactions %}
+            <li style="width: 800px;">
+                <a style="color: green; font-size: 15px; width: 800px;" href="{% url 'viewprotransaction' protransaction.id %}">
+                    {{ protransaction.date }} - {{ protransaction.name }}: {{ protransaction.description }}
+                    ({{ protransaction.incometype.first }}) :
+                    <b style="color: green">
+                        {{ protransaction.amount }} руб.
+                    </b>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <p>{{ multidash1 }}</p>
+
+        <h2 style="color: red">Проводки по расходам:</h2>
+
+        {% if notempty %}
+        <p style="color: red">(за период с {{ startday }}.{{startmonth}}.{{startyear}} по {{ finishday }}.{{finishmonth}}.{{finishyear}}
+            найдено записей: {{ countfiltexp }})</p>
+        {% else %}
+        <p style="color: red">(за период с {{ today }} по {{ oldest_of_oldest_dates }}
+            найдено записей: {{ countfiltexp }})</p>
+        {% endif %}
+
+        <ul style="color: red">
+            {% for exptransaction in exptransactions %}
+            <li style="width: 800px;">
+                <a style="color: red; font-size: 15px; width: 800px;" href="{% url 'viewexptransaction' exptransaction.id %}">
+                    {{ exptransaction.date }} - {{ exptransaction.name }} {{ exptransaction.description }}
+                    ({{ exptransaction.category.first }}): {{ exptransaction.quantity }} {{ exptransaction.meter.first }} за
+                    <b>
+                         {{ exptransaction.total_cost }} руб.
+                    </b>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </form>
+
 {% endblock %}

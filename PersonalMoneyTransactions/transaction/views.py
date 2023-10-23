@@ -151,39 +151,25 @@ def recordedtransactions(request):
     today = date.today()
 
     # Эта переменная для пунктира
-    multidash = '- ' * 117
+    multidash1 = '- ' * 80
+    multidash2 = '- ' * 117
+
+    notempty = True
 
     if request.method == 'POST':
-        startday = request.POST.get('startday')
-        startmonth = request.POST.get('startmonth')
-        startyear = request.POST.get('startyear')
-        finishday = request.POST.get('finishday')
-        finishmonth = request.POST.get('finishmonth')
-        finishyear = request.POST.get('finishyear')
+        try:
 
-        if startday == '' or startmonth == '' or startyear == '' or \
-                finishday == '' or finishmonth == '' or finishyear == '':
-
-            countfiltpro = protransactions.count
-            countfiltexp = exptransactions.count
-            if not countfiltpro:
-                countfiltpro = 0
-            if not countfiltexp:
-                countfiltexp = 0
-
-            # Формируем контекст вывода на страницу
-            context = {'protransactions': protransactions, 'exptransactions': exptransactions,
-                       'startday': startday, 'startmonth': startmonth, 'startyear': startyear,
-                       'finishday': finishday, 'finishmonth': finishmonth, 'finishyear': finishyear,
-                       'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp,
-                       'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
-                       'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
-                       'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
-                       'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
-                       'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash': multidash}
-            return render(request, 'transaction/recordedtransactions.html', context)
-
-        else:
+            from datetime import datetime
+            start_date = request.POST.get('trip-start')  # Получение значения даты из запроса
+            start_date = datetime.strptime(start_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
+            startday = start_date.day  # Получение дня
+            startmonth = start_date.month  # Получение месяца
+            startyear = start_date.year  # Получение год
+            finish_date = request.POST.get('trip-finish')  # Получение значения даты из запроса
+            finish_date = datetime.strptime(finish_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
+            finishday = finish_date.day  # Получение дня
+            finishmonth = finish_date.month  # Получение месяца
+            finishyear = finish_date.year  # Получение год
 
             protransactions = ProfitableTransaction.objects.filter(date__range=[f"{startyear}-{startmonth}-{startday}",
                                                                                 f"{finishyear}-{finishmonth}-{finishday}"
@@ -208,7 +194,27 @@ def recordedtransactions(request):
                        'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
                        'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
                        'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
-                       'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash': multidash}
+                       'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
+                       'multidash2': multidash2}
+            return render(request, 'transaction/recordedtransactions.html', context)
+
+        except ValueError:
+            notempty = False
+            countfiltpro = protransactions.count
+            countfiltexp = exptransactions.count
+            if not countfiltpro:
+                countfiltpro = 0
+            if not countfiltexp:
+                countfiltexp = 0
+            # Формируем контекст вывода на страницу
+            context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+                       'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
+                       'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
+                       'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
+                       'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
+                       'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
+                       'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
+                       'multidash2': multidash2}
             return render(request, 'transaction/recordedtransactions.html', context)
 
     else:
@@ -225,7 +231,8 @@ def recordedtransactions(request):
                    'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
                    'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
                    'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
-                   'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash': multidash}
+                   'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
+                       'multidash2': multidash2}
         return render(request, 'transaction/recordedtransactions.html', context)
 
 
