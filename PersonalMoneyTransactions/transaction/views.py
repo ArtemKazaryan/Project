@@ -63,8 +63,8 @@ def logoutuser(request):
 
 @login_required
 def recordedtransactions(request):
-    protransactions = ProfitableTransaction.objects.all()
-    exptransactions = ExpenditureTransaction.objects.all()
+    protransactions = ProfitableTransaction.objects.all().order_by('-date')
+    exptransactions = ExpenditureTransaction.objects.all().order_by('-date')
 
     # Получение списков из queryset'ов
     valuespro_list = protransactions.values()
