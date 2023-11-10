@@ -160,16 +160,16 @@ def recordedtransactions(request):
         try:
 
             from datetime import datetime
-            start_date = request.POST.get('trip-start')  # Получение значения даты из запроса
+            start_date = request.POST.get('filtering-start')  # Получение значения даты из запроса
             start_date = datetime.strptime(start_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
             startday = start_date.day  # Получение дня
             startmonth = start_date.month  # Получение месяца
-            startyear = start_date.year  # Получение год
-            finish_date = request.POST.get('trip-finish')  # Получение значения даты из запроса
+            startyear = start_date.year  # Получение года
+            finish_date = request.POST.get('filtering-finish')  # Получение значения даты из запроса
             finish_date = datetime.strptime(finish_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
             finishday = finish_date.day  # Получение дня
             finishmonth = finish_date.month  # Получение месяца
-            finishyear = finish_date.year  # Получение год
+            finishyear = finish_date.year  # Получение года
 
             protransactions = ProfitableTransaction.objects.filter(date__range=[f"{startyear}-{startmonth}-{startday}",
                                                                                 f"{finishyear}-{finishmonth}-{finishday}"
@@ -187,7 +187,7 @@ def recordedtransactions(request):
 
             # Формируем контекст вывода на страницу
             context = {'protransactions': protransactions, 'exptransactions': exptransactions,
-                       'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp,
+                       'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
                        'startday': startday, 'startmonth': startmonth, 'startyear': startyear,
                        'finishday': finishday, 'finishmonth': finishmonth, 'finishyear': finishyear,
                        'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
@@ -218,6 +218,7 @@ def recordedtransactions(request):
             return render(request, 'transaction/recordedtransactions.html', context)
 
     else:
+        notempty = False
         countfiltpro = protransactions.count
         countfiltexp = exptransactions.count
         if not countfiltpro:
@@ -226,7 +227,7 @@ def recordedtransactions(request):
             countfiltexp = 0
         # Формируем контекст вывода на страницу
         context = {'protransactions': protransactions, 'exptransactions': exptransactions,
-                   'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp,
+                   'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
                    'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
                    'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
                    'total_balance': total_balance, 'margin_total_rate': margin_total_rate,

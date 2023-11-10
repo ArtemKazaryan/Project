@@ -28,11 +28,11 @@
         <h1>Фильтр проводок за период:</h1>
         {% csrf_token %}
         <label for="start">Начальная дата:</label>
-        <input type="date" id="start" name="trip-start" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
+        <input type="date" id="start" name="filtering-start" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
                style="color: black; font-size: 20px; width: 180px;"/>
         <p></p>
         <label for="finish">Конечная дата:</label>
-        <input type="date" id="finish" name="trip-finish" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
+        <input type="date" id="finish" name="filtering-finish" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
                style="color: black; font-size: 20px; width: 180px;"/>
         <p></p>
         <button class="btn" type="submit">Отфильтровать</button>
@@ -45,7 +45,7 @@
         <p style="color: green">(за период с {{ startday }}.{{startmonth}}.{{startyear}} по {{ finishday }}.{{finishmonth}}.{{finishyear}}
             найдено записей: {{ countfiltpro }})</p>
         {% else %}
-        <p style="color: green">(за период с {{ today }} по {{ oldest_of_oldest_dates }}
+        <p style="color: green">(за период с {{ oldest_of_oldest_dates }} по {{ today }}
             найдено записей: {{ countfiltpro }})</p>
         {% endif %}
 
@@ -71,7 +71,7 @@
         <p style="color: red">(за период с {{ startday }}.{{startmonth}}.{{startyear}} по {{ finishday }}.{{finishmonth}}.{{finishyear}}
             найдено записей: {{ countfiltexp }})</p>
         {% else %}
-        <p style="color: red">(за период с {{ today }} по {{ oldest_of_oldest_dates }}
+        <p style="color: red">(за период с {{ oldest_of_oldest_dates }} по {{ today }}
             найдено записей: {{ countfiltexp }})</p>
         {% endif %}
 
