@@ -11,6 +11,7 @@ def func2(request, maxdeltadays, sumpro, sumexp, multidash):
                                                                       totalquant=Sum('quantity'), meter=F('meter__name'),
                                                                       categories=F('category__name')
                                                                          ).order_by()
+
     for item in queryset:
         item['consumptionrate'] = item['totalquant'] / maxdeltadays
         item['speedexp'] = item['totalexp'] / maxdeltadays

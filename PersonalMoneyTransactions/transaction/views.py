@@ -152,7 +152,7 @@ def recordedtransactions(request):
 
     # Эта переменная для пунктира
     multidash1 = '- ' * 80
-    multidash2 = '- ' * 117
+    multidash2 = '- ' * 100
 
     notempty = True
 
