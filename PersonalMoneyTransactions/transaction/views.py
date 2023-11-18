@@ -233,20 +233,21 @@ def recordedtransactions(request):
                    'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
                    'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
                    'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
-                       'multidash2': multidash2}
+                   'multidash2': multidash2}
         return render(request, 'transaction/recordedtransactions.html', context)
 
 
 
 @login_required
 def transactions_special_cost_calculations(request):
-    custom_range = range(0, 6)
+    custom_range = range(0, 7)
     funcnames = ['3. Расходы по наименованию товаров/услуг',
                  '4. Расходы по категориям товаров/услуг',
                  '5. Доходы по наименованию источников',
                  '6. Доходы по категориям источников',
                  '7. Доходы и расходы по наименованиям (объединение таблиц 3 и 5)',
                  '8. Доходы и расходы по категориям (объединение таблиц 4 и 6)',
+                 '9. Доходы и расходы по наименованиям и категориям (объединение таблиц 7 и 8)',
                  ]
 
     return render(request, 'transaction/special_cost_calculations.html', {'custom_range': custom_range,
@@ -304,7 +305,7 @@ def specialcostcalculation1(request):
             except:
                 return render(request, 'transaction/specialcalculation1.html', {'error': 'Наименование товара/услуги введено неверно!'})
         else:
-            return render(request, 'transaction/specialcalculation1.html', {'error': 'Вы не ввели наименование товара/услуги!'})
+            return render(request, 'transaction/specialcalculation1.html', {'error': 'Наименование товара/услуги не было введено!'})
     else:
         return render(request, 'transaction/specialcalculation1.html')
 
@@ -353,7 +354,7 @@ def specialcostcalculation2(request):
             except:
                 return render(request, 'transaction/specialcalculation2.html', {'error': 'Наименование дохода введено неверно!'})
         else:
-            return render(request, 'transaction/specialcalculation2.html', {'error': 'Вы не ввели наименование дохода!'})
+            return render(request, 'transaction/specialcalculation2.html', {'error': 'Наименование дохода не было введено!'})
     else:
         return render(request, 'transaction/specialcalculation2.html')
 
