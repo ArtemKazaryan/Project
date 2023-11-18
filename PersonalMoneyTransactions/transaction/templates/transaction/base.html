@@ -15,7 +15,7 @@
                 <li><a href="{% url 'createpro' %}">Добавить доход</a></li>
                 <li><a href="{% url 'createexp' %}">Добавить расход</a></li>
                 <li><a href="{% url 'recorded' %}">Все проводки</a></li>
-                <li><a href="{% url 'special_cost_calculations' %}">Итоговые таблицы</a></li>
+                <li><a href="{% url 'special_cost_calculations' %}">Таблицы с итогами расчётов</a></li>
                 <li>
                     <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}

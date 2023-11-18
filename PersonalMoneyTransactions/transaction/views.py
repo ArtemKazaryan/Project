@@ -240,13 +240,13 @@ def recordedtransactions(request):
 
 @login_required
 def transactions_special_cost_calculations(request):
-    custom_range = range(0, 4)
+    custom_range = range(0, 6)
     funcnames = ['3. Расходы по наименованию товаров/услуг',
                  '4. Расходы по категориям товаров/услуг',
-                 '5. Доходы по категориям источников',
-                 '6. Доходы по наименованию источников',
-                 '7. Доходы и расходы по наименованиям (объединение таблиц 6 и 3)',
-                 '8. Доходы и расходы по категориям (объединение таблиц 5 и 4)',
+                 '5. Доходы по наименованию источников',
+                 '6. Доходы по категориям источников',
+                 '7. Доходы и расходы по наименованиям (объединение таблиц 3 и 5)',
+                 '8. Доходы и расходы по категориям (объединение таблиц 4 и 6)',
                  ]
 
     return render(request, 'transaction/special_cost_calculations.html', {'custom_range': custom_range,
@@ -259,47 +259,52 @@ def specialcostcalculation1(request):
     multidash = '- ' * 117
     if request.method == 'POST':
         input_name_value = request.POST.get('calculation1input')
+        if input_name_value:
+            try:
+                exptransactions = ExpenditureTransaction.objects.all()
 
-        exptransactions = ExpenditureTransaction.objects.all()
+                # Получаем минимальную дату из БД по доходам
+                oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
+                if not oldest_date_pro:
+                    return 0
+                # Разница между текущей датой и самой старой датой
+                delta_date_pro = (date.today() - oldest_date_pro).days + 1
 
-        # Получаем минимальную дату из БД по доходам
-        oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
-        if not oldest_date_pro:
-            return 0
-        # Разница между текущей датой и самой старой датой
-        delta_date_pro = (date.today() - oldest_date_pro).days + 1
+                # Получаем минимальную дату из БД по расходам
+                oldest_date_exp = ExpenditureTransaction.objects.aggregate(Min('date'))['date__min']
+                if not oldest_date_exp:
+                    return 0
+                # Разница между текущей датой и самой старой датой
+                delta_date_exp = (date.today() - oldest_date_exp).days + 1
 
-        # Получаем минимальную дату из БД по расходам
-        oldest_date_exp = ExpenditureTransaction.objects.aggregate(Min('date'))['date__min']
-        if not oldest_date_exp:
-            return 0
-        # Разница между текущей датой и самой старой датой
-        delta_date_exp = (date.today() - oldest_date_exp).days + 1
+                # Находим общий срок ведения учёта
+                delta_days = [delta_date_pro, delta_date_exp]
+                max_delta_days = max(delta_days)
 
-        # Находим общий срок ведения учёта
-        delta_days = [delta_date_pro, delta_date_exp]
-        max_delta_days = max(delta_days)
+                # Получение списков из queryset'ов
+                valuesexp_list = exptransactions.values()
 
-        # Получение списков из queryset'ов
-        valuesexp_list = exptransactions.values()
+                sumpricequantity = 0
+                sumquantity = 0
+                for item in valuesexp_list:
+                    if item['name'].lower() == input_name_value.lower():
+                        value = round(item['quantity'] * item['price'], 2)
+                        sumpricequantity += value
+                        value = item['quantity']
+                        sumquantity += value
+                input_name_value = request.POST.get('calculation1input').capitalize()
+                speedexp = round(sumpricequantity / max_delta_days, 2)
+                consumptionrate = round(sumquantity / max_delta_days, 2)
+                averageprice = round(sumpricequantity / sumquantity, 2)
 
-        sumpricequantity = 0
-        sumquantity = 0
-        for item in valuesexp_list:
-            if item['name'].lower() == input_name_value.lower():
-                value = round(item['quantity'] * item['price'], 2)
-                sumpricequantity += value
-                value = item['quantity']
-                sumquantity += value
-        input_name_value = request.POST.get('calculation1input').capitalize()
-        speedexp = round(sumpricequantity / max_delta_days, 2)
-        consumptionrate = round(sumquantity / max_delta_days, 2)
-        averageprice = round(sumpricequantity / sumquantity, 2)
-        pk = 1
-        context = {'averageprice': averageprice, 'input_name_value': input_name_value, 'speedexp': speedexp,
-                   'consumptionrate': consumptionrate, 'pk': pk,
-                   'sumpricequantity': sumpricequantity, 'sumquantity': sumquantity, 'multidash': multidash}
-        return render(request, 'transaction/specialcalculation1.html', context)
+                context = {'averageprice': averageprice, 'input_name_value': input_name_value, 'speedexp': speedexp,
+                           'consumptionrate': consumptionrate,
+                           'sumpricequantity': sumpricequantity, 'sumquantity': sumquantity, 'multidash': multidash}
+                return render(request, 'transaction/specialcalculation1.html', context)
+            except:
+                return render(request, 'transaction/specialcalculation1.html', {'error': 'Наименование товара/услуги введено неверно!'})
+        else:
+            return render(request, 'transaction/specialcalculation1.html', {'error': 'Вы не ввели наименование товара/услуги!'})
     else:
         return render(request, 'transaction/specialcalculation1.html')
 
@@ -309,41 +314,46 @@ def specialcostcalculation2(request):
     multidash = '- ' * 117
     if request.method == 'POST':
         input_name = request.POST.get('calculation2input')
+        if input_name:
+            try:
+                protransactions = ProfitableTransaction.objects.all()
 
-        protransactions = ProfitableTransaction.objects.all()
+                # Получаем минимальную дату из БД по доходам
+                oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
+                if not oldest_date_pro:
+                    return 0
+                # Разница между текущей датой и самой старой датой
+                delta_date_pro = (date.today() - oldest_date_pro).days + 1
 
-        # Получаем минимальную дату из БД по доходам
-        oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
-        if not oldest_date_pro:
-            return 0
-        # Разница между текущей датой и самой старой датой
-        delta_date_pro = (date.today() - oldest_date_pro).days + 1
+                # Получаем минимальную дату из БД по расходам
+                oldest_date_exp = ExpenditureTransaction.objects.aggregate(Min('date'))['date__min']
+                if not oldest_date_exp:
+                    return 0
+                # Разница между текущей датой и самой старой датой
+                delta_date_exp = (date.today() - oldest_date_exp).days + 1
 
-        # Получаем минимальную дату из БД по расходам
-        oldest_date_exp = ExpenditureTransaction.objects.aggregate(Min('date'))['date__min']
-        if not oldest_date_exp:
-            return 0
-        # Разница между текущей датой и самой старой датой
-        delta_date_exp = (date.today() - oldest_date_exp).days + 1
+                # Находим общий срок ведения учёта
+                delta_days = [delta_date_pro, delta_date_exp]
+                max_delta_days = max(delta_days)
 
-        # Находим общий срок ведения учёта
-        delta_days = [delta_date_pro, delta_date_exp]
-        max_delta_days = max(delta_days)
+                # Получение списков из queryset'ов
+                valuespro_list = protransactions.values()
 
-        # Получение списков из queryset'ов
-        valuespro_list = protransactions.values()
+                sumamount = 0
+                for item in valuespro_list:
+                    if item['name'].lower() == input_name.lower():
+                        value = round(item['amount'], 2)
+                        sumamount += value
+                input_name = request.POST.get('calculation2input').capitalize()
+                speedpro = round(sumamount / max_delta_days, 2)
 
-        sumamount = 0
-        for item in valuespro_list:
-            if item['name'] == input_name:
-                value = round(item['amount'], 2)
-                sumamount += value
-        input_name = request.POST.get('calculation2input')
-        speedpro = round(sumamount / max_delta_days, 2)
-        pk = 2
-        context = {'input_name': input_name, 'speedpro': speedpro, 'pk': pk,
-                   'sumamount': sumamount, 'multidash': multidash}
-        return render(request, 'transaction/specialcalculation2.html', context)
+                context = {'speedpro': speedpro, 'input_name': input_name,
+                           'sumamount': sumamount, 'multidash': multidash}
+                return render(request, 'transaction/specialcalculation2.html', context)
+            except:
+                return render(request, 'transaction/specialcalculation2.html', {'error': 'Наименование дохода введено неверно!'})
+        else:
+            return render(request, 'transaction/specialcalculation2.html', {'error': 'Вы не ввели наименование дохода!'})
     else:
         return render(request, 'transaction/specialcalculation2.html')
 
