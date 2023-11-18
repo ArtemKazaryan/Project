@@ -88,6 +88,93 @@
         {% endfor %}
     </table>
 
+{% elif pk == 7 %}
+    <h1>{{ pk }}. Доходы и расходы по наименованиям (объединение таблиц 6 и 3):</h1>
+    <h2> Доходы по наименованию источников:</h2>
+       <table>
+         <tr>
+           <th>Наименование:</th>
+           <th>Доход,руб.:</th>
+           <th>Скорость дохода,руб.в день:</th>
+           <th>Доля от общего дохода:</th>
+         </tr>
+           {% for item in queryset1 %}
+               <tr style="text-align: center;">
+                 <td style="font-size: 20px;"><b>{{ item.name }}</b> <b style="font-size: 15px;">({{ item.incometypes }})</b></td>
+                 <td><b>{{ item.totalpro }}</b></td>
+                 <td><b>{{ item.speedpro | floatformat:2 }}</b></td>
+                 <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.percentpro | floatformat:3 }}</b>%</td>
+               </tr>
+           {% endfor %}
+       </table>
+    <h2> </h2>
+    <h2> Расходы по наименованию товаров/услуг:</h2>
+
+       <table>
+           <tr>
+               <th>Товар/услуга:</th>
+               <th>Категория:</th>
+               <th>Расход,руб.:</th>
+               <th>Количество:</th>
+               <th>Единица измерения:</th>
+               <th>Средняя цена:</th>
+               <th>Скорость расхода,руб.в день:</th>
+               <th>Потребление:</th>
+           </tr>
+           {% for item in queryset2 %}
+           <tr style="text-align: center;">
+               <td style="font-size: 20px;"><b>{{ item.name }}</b></td>
+               <td>{{ item.categories }}</td>
+               <td><b>{{ item.totalexp }}</b></td>
+               <td><b>{{ item.totalquant | floatformat:2 }}</b></td>
+               <td>{{ item.meter }}</td>
+               <td style="font-size: 10px;"><b style="font-size: 17px;">{{ item.averpr | floatformat:2 }}</b>руб.за {{ item.meter }}</td>
+               <td><b>{{ item.speedexp | floatformat:2 }}</b></td>
+               <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.consumptionrate | floatformat:2 }}</b> {{ item.meter }} в день</td>
+           </tr>
+           {% endfor %}
+       </table>
+
+{% elif pk == 8 %}
+       <h1>{{ pk }}. Доходы и расходы по категориям (объединение таблиц 5 и 4):</h1>
+       <h2> Доходы по категориям (из таблицы 5):</h2>
+       <table>
+           <tr>
+               <th>Категория:</th>
+               <th>Доход,руб.:</th>
+               <th>Скорость дохода,руб.в день:</th>
+               <th>Доля от общего дохода:</th>
+           </tr>
+           {% for item in queryset1 %}
+           <tr style="text-align: center;">
+               <td style="font-size: 20px;"><b>{{ item.incometypes }}</b></td>
+               <td><b>{{ item.totalpro }}</b></td>
+               <td><b>{{ item.speedpro | floatformat:2 }}</b></td>
+               <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.percentpro | floatformat:3 }}</b>%</td>
+           </tr>
+           {% endfor %}
+       </table>
+        <h2> </h2>
+        <h2> Расходы по категориям (из таблицы 4):</h2>
+
+       <table>
+         <tr>
+           <th>Категория:</th>
+           <th>Расход,руб.:</th>
+           <th>Скорость расхода,руб.в день:</th>
+           <th>Доля от общего расхода:</th>
+         </tr>
+           {% for item in queryset2 %}
+               <tr style="text-align: center;">
+                 <td style="font-size: 20px;"><b>{{ item.categories }}</b></td>
+                 <td><b>{{ item.totalexp }}</b></td>
+                 <td><b>{{ item.speedexp | floatformat:2 }}</b></td>
+                 <td style="font-size: 12px;"><b style="font-size: 17px;">{{ item.percentexp | floatformat:3 }}</b>%</td>
+               </tr>
+           {% endfor %}
+       </table>
+
+
 {% endif %}
 {% endblock %}
 
