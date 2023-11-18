@@ -26,18 +26,43 @@
 
     <form class="bg" method="POST" action="{% url 'recorded' %}" style="width: 880px;">
         {% csrf_token %}
-        <h1>Фильтр проводок за период:</h1>
-        {% csrf_token %}
-        <label for="start">Начальная дата:</label>
+        <h1>Фильтр проводок:</h1>
+        <h2>- за период (перепутывание дат местами не приведет к ошибке):</h2>
+        <label style="color: blue" for="start">- с начальной даты&nbsp:</label>
         <input type="date" id="start" name="filtering-start" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
                style="color: black; font-size: 20px; width: 180px;"/>
         <p></p>
-        <label for="finish">Конечная дата:</label>
+        <label style="color: blue" for="finish">- по конечную дату&nbsp&nbsp:</label>
         <input type="date" id="finish" name="filtering-finish" value="гггг-мм-дд" min="0000-01-01" max="2050-12-31"
                style="color: black; font-size: 20px; width: 180px;"/>
         <p></p>
-        <button class="btn" type="submit">Отфильтровать</button>
+        <p></p>
+        <h2>- с учётом:</h2>
+        <label style="color: blue" for="incomtypes">- типа дохода&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp:</label>
+        <select name="filtering-incomtypes" id="incomtypes">
+            <option>Все</option>
+            {% for incomtype in incomtypes %}
+            <option>
+                {{ incomtype.name }}
+            </option>
+            {% endfor %}
+        </select>
+        <p></p>
+        <label style="color: blue" for="categories">- категории расхода:</label>
+        <select name="filtering-categories" id="categories">
+            <option>Все</option>
+            {% for category in categories %}
+            <option>
+                {{ category.name }}
+            </option>
+            {% endfor %}
+        </select>
 
+        <p></p>
+
+
+        <button class="btn" type="submit">Отфильтровать</button>
+        <p style="color: orangered">{{ error }}</p>
         <p>{{ multidash1 }}</p>
 
         <h2 style="color: green">Проводки по доходам:</h2>
@@ -49,7 +74,7 @@
         <p style="color: green">(за период с {{ oldest_of_oldest_dates }} по {{ today }}
             найдено записей: {{ countfiltpro }})</p>
         {% endif %}
-
+        <p style="color: green">(тип дохода: {{ incom }}, категория расхода: {{ categ }}) </p>
         <ul style="color: green">
             {% for protransaction in protransactions %}
             <li style="width: 800px;">
@@ -75,7 +100,7 @@
         <p style="color: red">(за период с {{ oldest_of_oldest_dates }} по {{ today }}
             найдено записей: {{ countfiltexp }})</p>
         {% endif %}
-
+        <p style="color: red">(тип дохода: {{ incom }}, категория расхода: {{ categ }}) </p>
         <ul style="color: red">
             {% for exptransaction in exptransactions %}
             <li style="width: 800px;">

@@ -17,7 +17,7 @@ from django.db import IntegrityError
 from .forms import ProfitableTransactionForm, ExpenditureTransactionForm
 
 # Импортируем наши модели, взаимодействующие с базой данных из файла models.py
-from .models import ProfitableTransaction, ExpenditureTransaction, Meter
+from .models import ProfitableTransaction, ExpenditureTransaction, IncomeType, Category, Meter
 
 # Импортируем стандартную функцию-декоратор, отслеживающую выполнения требования входа пользователя в систему
 from django.contrib.auth.decorators import login_required
@@ -32,7 +32,6 @@ from math import floor
 
 # Импортируем список наших функций из файла funcs.py
 from .funcs import funcs
-
 
 def home(request):
     return render(request, 'transaction/home.html')
@@ -87,6 +86,8 @@ def logoutuser(request):
 def recordedtransactions(request):
     protransactions = ProfitableTransaction.objects.all().order_by('-date')
     exptransactions = ExpenditureTransaction.objects.all().order_by('-date')
+    categories = Category.objects.all()
+    incomtypes = IncomeType.objects.all()
 
     # Получение списков из queryset'ов
     valuespro_list = protransactions.values()
@@ -158,26 +159,82 @@ def recordedtransactions(request):
 
     if request.method == 'POST':
         try:
+            try:
+                from datetime import datetime
 
-            from datetime import datetime
-            start_date = request.POST.get('filtering-start')  # Получение значения даты из запроса
-            start_date = datetime.strptime(start_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
-            startday = start_date.day  # Получение дня
-            startmonth = start_date.month  # Получение месяца
-            startyear = start_date.year  # Получение года
-            finish_date = request.POST.get('filtering-finish')  # Получение значения даты из запроса
-            finish_date = datetime.strptime(finish_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
-            finishday = finish_date.day  # Получение дня
-            finishmonth = finish_date.month  # Получение месяца
-            finishyear = finish_date.year  # Получение года
+                start_date = request.POST.get('filtering-start')  # Получение значения даты из запроса
+                finish_date = request.POST.get('filtering-finish')  # Получение значения даты из запроса
+                if start_date > finish_date:
+                    start_date, finish_date = finish_date, start_date
 
-            protransactions = ProfitableTransaction.objects.filter(date__range=[f"{startyear}-{startmonth}-{startday}",
-                                                                                f"{finishyear}-{finishmonth}-{finishday}"
-                                                                                ]).order_by('-date')
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
+                startday = start_date.day  # Получение дня
+                startmonth = start_date.month  # Получение месяца
+                startyear = start_date.year  # Получение года
+                finish_date = datetime.strptime(finish_date, '%Y-%m-%d')  # Преобразование строки в объект datetime
+                finishday = finish_date.day  # Получение дня
+                finishmonth = finish_date.month  # Получение месяца
+                finishyear = finish_date.year  # Получение года
+                date_range = [f"{startyear}-{startmonth}-{startday}", f"{finishyear}-{finishmonth}-{finishday}"]
+                incom = request.POST.get('filtering-incomtypes')
+                categ = request.POST.get('filtering-categories')
+                if incom == 'Все' and categ == 'Все':
+                    protransactions = ProfitableTransaction.objects.filter(date__range=date_range).order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.filter(date__range=date_range).order_by('-date')
+                elif incom == 'Все' and categ != 'Все':
+                    protransactions = ProfitableTransaction.objects.filter(date__range=date_range).order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.filter(date__range=date_range).filter(
+                        category__name=categ).order_by('-date')
+                elif incom != 'Все' and categ == 'Все':
+                    protransactions = ProfitableTransaction.objects.filter(date__range=date_range).filter(
+                        incometype__name=incom).order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.filter(date__range=date_range).order_by('-date')
+                elif incom != 'Все' and categ != 'Все':
+                    protransactions = ProfitableTransaction.objects.filter(date__range=date_range).filter(
+                        incometype__name=incom).order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.filter(date__range=date_range).filter(
+                        category__name=categ).order_by('-date')
 
-            exptransactions = ExpenditureTransaction.objects.filter(date__range=[f"{startyear}-{startmonth}-{startday}",
-                                                                                 f"{finishyear}-{finishmonth}-{finishday}"
-                                                                                 ]).order_by('-date')
+                notempty = True
+                countfiltpro = protransactions.count
+                countfiltexp = exptransactions.count
+                if not countfiltpro:
+                    countfiltpro = 0
+                if not countfiltexp:
+                    countfiltexp = 0
+
+                # Формируем контекст вывода на страницу
+                context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+                           'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
+                           'startday': startday, 'startmonth': startmonth, 'startyear': startyear,
+                           'finishday': finishday, 'finishmonth': finishmonth, 'finishyear': finishyear,
+                           'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
+                           'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
+                           'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
+                           'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
+                           'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
+                           'multidash2': multidash2, 'incomtypes': incomtypes, 'categories': categories,
+                           'incom': incom, 'categ': categ}
+                return render(request, 'transaction/recordedtransactions.html', context)
+
+
+            except:
+                incom = request.POST.get('filtering-incomtypes')
+                categ = request.POST.get('filtering-categories')
+                if incom == 'Все' and categ == 'Все':
+                    protransactions = ProfitableTransaction.objects.all().order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.all().order_by('-date')
+                elif incom == 'Все' and categ != 'Все':
+                    protransactions = ProfitableTransaction.objects.all().order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.filter(category__name=categ).order_by('-date')
+                elif incom != 'Все' and categ == 'Все':
+                    protransactions = ProfitableTransaction.objects.filter(incometype__name=incom).order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.all().order_by('-date')
+                elif incom != 'Все' and categ != 'Все':
+                    protransactions = ProfitableTransaction.objects.filter(incometype__name=incom).order_by('-date')
+                    exptransactions = ExpenditureTransaction.objects.filter(category__name=categ).order_by('-date')
+
+            notempty = False
             countfiltpro = protransactions.count
             countfiltexp = exptransactions.count
             if not countfiltpro:
@@ -188,14 +245,15 @@ def recordedtransactions(request):
             # Формируем контекст вывода на страницу
             context = {'protransactions': protransactions, 'exptransactions': exptransactions,
                        'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
-                       'startday': startday, 'startmonth': startmonth, 'startyear': startyear,
-                       'finishday': finishday, 'finishmonth': finishmonth, 'finishyear': finishyear,
                        'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
                        'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
                        'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
                        'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
                        'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
-                       'multidash2': multidash2}
+                       'multidash2': multidash2, 'incomtypes': incomtypes, 'categories': categories,
+                       'incom': incom, 'categ': categ,
+                       'error': 'В фильтре не указан период проводок или указана только одна дата.'
+                                'Поэтому Будет показана информация за весь период учёта!'}
             return render(request, 'transaction/recordedtransactions.html', context)
 
         except ValueError:
@@ -214,7 +272,7 @@ def recordedtransactions(request):
                        'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
                        'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
                        'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
-                       'multidash2': multidash2}
+                       'multidash2': multidash2, 'incomtypes': incomtypes, 'categories': categories}
             return render(request, 'transaction/recordedtransactions.html', context)
 
     else:
@@ -233,7 +291,7 @@ def recordedtransactions(request):
                    'total_balance': total_balance, 'margin_total_rate': margin_total_rate,
                    'today': today, 'max_delta_days': max_delta_days, 'days_left': days_left,
                    'oldest_of_oldest_dates': oldest_of_oldest_dates, 'multidash1': multidash1,
-                   'multidash2': multidash2}
+                   'multidash2': multidash2,'incomtypes': incomtypes, 'categories': categories}
         return render(request, 'transaction/recordedtransactions.html', context)
 
 
