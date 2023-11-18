@@ -3,7 +3,6 @@ from .models import ProfitableTransaction, ExpenditureTransaction
 from django.db.models import Sum, F
 from django.utils.safestring import mark_safe
 
-
 def func2(request, maxdeltadays, sumpro, sumexp, multidash):
     pk = 3
     queryset = ExpenditureTransaction.objects.values('name').annotate(totalexp=Sum(F('quantity') * F('price')),
@@ -18,7 +17,7 @@ def func2(request, maxdeltadays, sumpro, sumexp, multidash):
         item['percentexp'] = round(100 * item['totalexp'] / sumexp, 3)
         item['speed30exp'] = item['speedexp'] * 30
 
-    context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
+    context = {'queryset': queryset, 'sumexp': sumexp, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
 
 
@@ -31,7 +30,7 @@ def func3(request, maxdeltadays, sumpro, sumexp, multidash):
         item['percentexp'] = round(100 * item['totalexp'] / sumexp, 3)
         item['speed30exp'] = item['speedexp'] * 30
 
-    context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
+    context = {'queryset': queryset, 'sumexp': sumexp, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
 
 
@@ -44,7 +43,7 @@ def func4(request, maxdeltadays, sumpro, sumexp, multidash):
         item['percentpro'] = round(100 * item['totalpro'] / sumpro, 3)
         item['speed30pro'] = item['speedpro'] * 30
 
-    context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
+    context = {'queryset': queryset, 'sumpro': sumpro, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
 
 
@@ -58,7 +57,7 @@ def func5(request, maxdeltadays, sumpro, sumexp, multidash):
         item['percentpro'] = round(100 * item['totalpro'] / sumpro, 3)
         item['speed30pro'] = item['speedpro'] * 30
 
-    context = {'queryset': queryset, 'multidash': multidash, 'pk': pk}
+    context = {'queryset': queryset, 'sumpro': sumpro, 'multidash': multidash, 'pk': pk}
     return render(request, 'transaction/specialcalculation.html', context)
 
 
@@ -83,7 +82,8 @@ def func6(request, maxdeltadays, sumpro, sumexp, multidash):
         item['percentexp'] = round(100 * item['totalexp'] / sumexp, 3)
         item['speed30exp'] = item['speedexp'] * 30
 
-    context = {'queryset1': queryset1, 'queryset2': queryset2, 'multidash': multidash, 'pk': pk}
+    context = {'queryset1': queryset1, 'queryset2': queryset2, 'sumpro': sumpro, 'sumexp': sumexp,
+               'multidash': multidash, 'pk': pk}
 
     return render(request, 'transaction/specialcalculation.html', context)
 
@@ -104,7 +104,8 @@ def func7(request, maxdeltadays, sumpro, sumexp, multidash):
         item['percentexp'] = round(100 * item['totalexp'] / sumexp, 3)
         item['speed30exp'] = item['speedexp'] * 30
 
-    context = {'queryset1': queryset1, 'queryset2': queryset2, 'multidash': multidash, 'pk': pk}
+    context = {'queryset1': queryset1, 'queryset2': queryset2, 'sumpro': sumpro, 'sumexp': sumexp,
+               'multidash': multidash, 'pk': pk}
 
     return render(request, 'transaction/specialcalculation.html', context)
 
@@ -123,6 +124,7 @@ def func8(request, maxdeltadays, sumpro, sumexp, multidash):
                                                                       totalquant=Sum('quantity'), meter=F('meter__name'),
                                                                       categories=F('category__name')
                                                                          ).order_by()
+
 
     for item in queryset2:
         item['consumptionrate'] = item['totalquant'] / maxdeltadays
@@ -145,14 +147,11 @@ def func8(request, maxdeltadays, sumpro, sumexp, multidash):
         item['speed30exp'] = item['speedexp'] * 30
 
     context = {'queryset1': queryset1, 'queryset2': queryset2, 'queryset3': queryset3, 'queryset4': queryset4,
-               'multidash': multidash, 'pk': pk}
+               'sumpro': sumpro, 'sumexp': sumexp, 'multidash': multidash, 'pk': pk}
 
     return render(request, 'transaction/specialcalculation.html', context)
 
 
 
 funcs = ['', '', func2, func3, func4, func5, func6, func7, func8]
-
-
-
 
