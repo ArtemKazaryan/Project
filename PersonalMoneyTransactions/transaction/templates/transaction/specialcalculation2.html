@@ -13,8 +13,34 @@
 {{ multidash }}
 
 {% if input_name %}
-<p><b>{{ input_name }}</b> ( ДОХОД: <b>{{ sumamount }}</b> руб., ТЕМП ДОХОДА: <b>{{ speedpro }}</b> руб. в день )</p>
+<p><b>{{ input_name }}</b> ( ОБЩИЙ ДОХОД: <b>{{ sumamount }}</b> руб., ТЕМП ДОХОДА: <b>{{ speedpro }}</b> руб. в день )</p>
 {% endif %}
 {{ multidash }}
+
+
+{% if searched_pronames %}
+    <h2>Детализация:</h2>
+    <table>
+
+        <tr>
+            <th>Дата получения:</th>
+            <th>Наименование (тип дохода):</th>
+            <th>Краткое описание:</th>
+            <th>Сумма дохода:</th>
+        </tr>
+
+        {% for searched_proname in searched_pronames %}
+
+        <tr style="text-align: center;">
+            <td style="font-size: 20px;"><b>{{ searched_proname.date }}</b></td>
+            <td><b>{{ searched_proname.name }} ({{ searched_proname.incometype.first }})</b></td>
+            <td><b>{{ searched_proname.description }}</b></td>
+            <td style="font-size: 12px;"><b style="font-size: 17px;">{{ searched_proname.amount  | floatformat:2 }} руб.</b></td>
+        </tr>
+
+        {% endfor %}
+
+    </table>
+{% endif %}
 
 {% endblock %}

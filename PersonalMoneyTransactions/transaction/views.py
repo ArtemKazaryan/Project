@@ -254,6 +254,7 @@ def recordedtransactions(request):
                        'incom': incom, 'categ': categ,
                        'error': 'В фильтре не указан период проводок или указана только одна дата.'
                                 'Поэтому Будет показана информация за весь период учёта!'}
+
             return render(request, 'transaction/recordedtransactions.html', context)
 
         except ValueError:
@@ -318,10 +319,11 @@ def specialcostcalculation1(request):
     multidash = '- ' * 117
     if request.method == 'POST':
         input_name_value = request.POST.get('calculation1input')
+
         if input_name_value:
             try:
                 exptransactions = ExpenditureTransaction.objects.all()
-
+                searched_expnames = ExpenditureTransaction.objects.filter(name=input_name_value).order_by('-date')
                 # Получаем минимальную дату из БД по доходам
                 oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
                 if not oldest_date_pro:
@@ -357,7 +359,7 @@ def specialcostcalculation1(request):
                 averageprice = round(sumpricequantity / sumquantity, 2)
 
                 context = {'averageprice': averageprice, 'input_name_value': input_name_value, 'speedexp': speedexp,
-                           'consumptionrate': consumptionrate,
+                           'consumptionrate': consumptionrate, 'searched_expnames': searched_expnames,
                            'sumpricequantity': sumpricequantity, 'sumquantity': sumquantity, 'multidash': multidash}
                 return render(request, 'transaction/specialcalculation1.html', context)
             except:
@@ -376,7 +378,7 @@ def specialcostcalculation2(request):
         if input_name:
             try:
                 protransactions = ProfitableTransaction.objects.all()
-
+                searched_pronames = ProfitableTransaction.objects.filter(name=input_name).order_by('-date')
                 # Получаем минимальную дату из БД по доходам
                 oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
                 if not oldest_date_pro:
@@ -406,7 +408,7 @@ def specialcostcalculation2(request):
                 input_name = request.POST.get('calculation2input').capitalize()
                 speedpro = round(sumamount / max_delta_days, 2)
 
-                context = {'speedpro': speedpro, 'input_name': input_name,
+                context = {'speedpro': speedpro, 'input_name': input_name,'searched_pronames': searched_pronames,
                            'sumamount': sumamount, 'multidash': multidash}
                 return render(request, 'transaction/specialcalculation2.html', context)
             except:
