@@ -33,11 +33,46 @@ from math import floor
 # Импортируем список наших функций из файла funcs.py
 from .funcs import funcs
 
+from playwright.sync_api import Playwright, sync_playwright, expect
+
+
+
 def home(request):
+    def run(playwright: Playwright) -> None:
+        browser = playwright.chromium.launch(headless=True)
+        context = browser.new_context()
+        page = context.new_page()
+        page.goto("http://127.0.0.1:8000/admin/login/?next=/admin/")
+        page.get_by_label("Имя пользователя:").fill("admin")
+        page.get_by_label("Пароль:").click()
+        page.get_by_label("Пароль:").fill("Qq12345!")
+        page.get_by_role("button", name="Войти").click()
+        page.get_by_role("button", name="Выйти").click()
+
+        # ---------------------
+        context.close()
+        browser.close()
+
+    with sync_playwright() as playwright:
+        run(playwright)
+
     return render(request, 'transaction/home.html')
 
 
 def signupuser(request):
+    # def run(playwright: Playwright) -> None:
+    #     browser = playwright.chromium.launch(headless=True)
+    #     context = browser.new_context()
+    #     page = context.new_page()
+    #     page.goto("http://127.0.0.1:8000/signup/")
+    #     page.get_by_role("button", name="Выйти").click()
+    #
+    #     # ---------------------
+    #     context.close()
+    #     browser.close()
+    # with sync_playwright() as playwright:
+    #     run(playwright)
+
     if request.method == 'GET':
         return render(request, 'transaction/signupuser.html', {'form': UserCreationForm()})
     else:
@@ -48,7 +83,34 @@ def signupuser(request):
                     password=request.POST['password1'])
                 user.save()
                 login(request, user)
-                return redirect('recorded')
+
+
+                def run(playwright: Playwright) -> None:
+                    browser = playwright.chromium.launch(headless=True)
+                    context = browser.new_context()
+                    page = context.new_page()
+                    page.goto("http://127.0.0.1:8000/admin/login/?next=/admin/")
+                    page.get_by_label("Имя пользователя:").click()
+                    page.get_by_label("Имя пользователя:").fill("admin")
+                    page.get_by_label("Имя пользователя:").press("Tab")
+                    page.get_by_label("Пароль:").fill("Qq12345!")
+                    page.get_by_role("button", name="Войти").click()
+                    page.get_by_role("link", name="Пользователи", exact=True).click()
+                    page.get_by_role("link", name=request.POST['username']).click()
+                    page.get_by_label("Активный").uncheck()
+                    page.get_by_role("button", name="Сохранить", exact=True).click()
+                    page.get_by_role("button", name="Выйти").click()
+
+                    # ---------------------
+                    context.close()
+                    browser.close()
+
+                with sync_playwright() as playwright:
+                    run(playwright)
+                # return render(request, 'transaction/home.html')
+
+                return redirect('home')
+
             except IntegrityError:
                 return render(request, 'transaction/signupuser.html',
                               {'form': UserCreationForm(),
@@ -417,6 +479,8 @@ def specialcostcalculation2(request):
             return render(request, 'transaction/specialcalculation2.html', {'error': 'Наименование дохода не было введено!'})
     else:
         return render(request, 'transaction/specialcalculation2.html')
+
+
 
 @login_required
 def specialcostcalculation(request, pk):

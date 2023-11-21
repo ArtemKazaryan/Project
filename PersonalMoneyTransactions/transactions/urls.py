@@ -20,7 +20,7 @@ from transaction import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('admin/', views.signupuser),
     # Auth
     path('signup/', views.signupuser, name='signup'),
     path('logout/', views.logoutuser, name='logout'),

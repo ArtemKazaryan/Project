@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'transaction/favicon1.ico' %}">
 </head>
 <body>
     <div class="menu">
         <div class="wrap">
+           <a href="{% url 'home' %}">
+                    <img src="{% static 'transaction/logo.jpg' %}" alt="">
+                </a>
             {% if user.is_authenticated %}
             <ul>
                 <li class="logo" ><a href="">Пользователь: {{ user.username }}</a></li>

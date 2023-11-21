@@ -32,6 +32,7 @@
         {% endfor %}
     </table>
     <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный расход по всем наименованиям = {{ sumexp }} руб. (100%)</b>%</p>
+{{ multidash2 }}
 
 {% elif pk == 4 %}
     <h1>{{ pk }}. Расходы по категориям товаров/услуг:</h1>
@@ -55,6 +56,7 @@
         {% endfor %}
     </table>
     <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный расход по всем категориям = {{ sumexp }} руб. (100%)</b>%</p>
+{{ multidash2 }}
 
 {% elif pk == 5 %}
     <h1>{{ pk }}. Доходы по наименованию источников:</h1>
@@ -77,6 +79,7 @@
         {% endfor %}
     </table>
     <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный доход по всем наименованиям = {{ sumpro }} руб. (100%)</b>%</p>
+{{ multidash2 }}
 
 {% elif pk == 6 %}
     <h1>{{ pk }}. Доходы по категориям источников:</h1>
@@ -99,7 +102,7 @@
         {% endfor %}
     </table>
     <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный доход по всем категориям = {{ sumpro }} руб. (100%)</b>%</p>
-
+{{ multidash2 }}
 
 {% elif pk == 7 %}
     <h1>{{ pk }}. Доходы и расходы по наименованиям (объединение таблиц 3 и 5):</h1>
@@ -125,7 +128,7 @@
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный доход по всем наименованиям = {{ sumpro }} руб. (100%)</b>%</p>
 
     <h2> </h2>
-
+{{ multidash2 }}
     <h2> Расходы по наименованию товаров/услуг (из таблицы 3):</h2>
 
        <table>
@@ -155,6 +158,7 @@
            {% endfor %}
        </table>
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный расход по всем наименованиям = {{ sumexp }} руб. (100%)</b>%</p>
+{{ multidash2 }}
 
 {% elif pk == 8 %}
        <h1>{{ pk }}. Доходы и расходы по категориям (объединение таблиц 4 и 6):</h1>
@@ -180,7 +184,7 @@
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный доход по всем категориям = {{ sumpro }} руб. (100%)</b>%</p>
 
         <h2> </h2>
-
+{{ multidash2 }}
         <h2> Расходы по категориям (из таблицы 4):</h2>
 
        <table>
@@ -202,6 +206,7 @@
            {% endfor %}
        </table>
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный расход по всем категориям = {{ sumexp }} руб. (100%)</b>%</p>
+{{ multidash2 }}
 
 {% elif pk == 9 %}
     <h1>{{ pk }}. Доходы и расходы по наименованиям и категориям (таблицы 3, 4, 5 и 6):</h1>
@@ -225,7 +230,7 @@
            {% endfor %}
        </table>
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный доход по всем наименованиям = {{ sumpro }} руб. (100%)</b>%</p>
-
+{{ multidash2 }}
        <h2> Доходы по категориям источников(из таблицы 6):</h2>
        <table>
            <tr>
@@ -248,7 +253,7 @@
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный доход по всем категориям = {{ sumpro }} руб. (100%)</b>%</p>
 
     <h2> </h2>
-
+{{ multidash2 }}
     <h2> Расходы по наименованию товаров/услуг (из таблицы 3):</h2>
 
        <table>
@@ -278,7 +283,7 @@
            {% endfor %}
        </table>
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный расход по всем наименованиям = {{ sumexp }} руб. (100%)</b>%</p>
-
+{{ multidash2 }}
         <h2> Расходы по категориям товаров/услуг(из таблицы 4):</h2>
 
        <table>
@@ -300,7 +305,7 @@
            {% endfor %}
        </table>
         <p style="font-size: 12px;"><b style="font-size: 17px;">Суммарный расход по всем категориям = {{ sumexp }} руб. (100%)</b>%</p>
-
+{{ multidash2 }}
 {% endif %}
 {% endblock %}
 
