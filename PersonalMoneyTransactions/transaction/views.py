@@ -17,13 +17,13 @@ from django.db import IntegrityError
 from .forms import ProfitableTransactionForm, ExpenditureTransactionForm
 
 # Импортируем наши модели, взаимодействующие с базой данных из файла models.py
-from .models import ProfitableTransaction, ExpenditureTransaction, IncomeType, Category, Meter
+from .models import ProfitableTransaction, ExpenditureTransaction, IncomeType, Category
 
 # Импортируем стандартную функцию-декоратор, отслеживающую выполнения требования входа пользователя в систему
 from django.contrib.auth.decorators import login_required
 
 # Импортируем стандартные арифметические функции для работы с моделью при вычислениях на основе данных из БД
-from django.db.models import Min, Sum, F, Avg
+from django.db.models import Min
 
 # Импортируем функцию даты из стандартного пакета datetime и функцию округления до меньшего целого
 # из стандартного пакета math
@@ -31,47 +31,20 @@ from datetime import date
 from math import floor
 
 # Импортируем список наших функций из файла funcs.py
-from .funcs import funcs
+from .funcs import funcs, auto_exit, activity_auto_disactivate
 
-from playwright.sync_api import Playwright, sync_playwright, expect
 
+from playwright.sync_api import sync_playwright
 
 
 def home(request):
-    def run(playwright: Playwright) -> None:
-        browser = playwright.chromium.launch(headless=True)
-        context = browser.new_context()
-        page = context.new_page()
-        page.goto("http://127.0.0.1:8000/admin/login/?next=/admin/")
-        page.get_by_label("Имя пользователя:").fill("admin")
-        page.get_by_label("Пароль:").click()
-        page.get_by_label("Пароль:").fill("Qq12345!")
-        page.get_by_role("button", name="Войти").click()
-        page.get_by_role("button", name="Выйти").click()
-
-        # ---------------------
-        context.close()
-        browser.close()
-
     with sync_playwright() as playwright:
-        run(playwright)
+        auto_exit(playwright)
 
     return render(request, 'transaction/home.html')
 
 
 def signupuser(request):
-    # def run(playwright: Playwright) -> None:
-    #     browser = playwright.chromium.launch(headless=True)
-    #     context = browser.new_context()
-    #     page = context.new_page()
-    #     page.goto("http://127.0.0.1:8000/signup/")
-    #     page.get_by_role("button", name="Выйти").click()
-    #
-    #     # ---------------------
-    #     context.close()
-    #     browser.close()
-    # with sync_playwright() as playwright:
-    #     run(playwright)
 
     if request.method == 'GET':
         return render(request, 'transaction/signupuser.html', {'form': UserCreationForm()})
@@ -81,32 +54,13 @@ def signupuser(request):
                 user = User.objects.create_user(
                     request.POST['username'],
                     password=request.POST['password1'])
+                username = request.POST['username']
                 user.save()
                 login(request, user)
 
 
-                def run(playwright: Playwright) -> None:
-                    browser = playwright.chromium.launch(headless=True)
-                    context = browser.new_context()
-                    page = context.new_page()
-                    page.goto("http://127.0.0.1:8000/admin/login/?next=/admin/")
-                    page.get_by_label("Имя пользователя:").click()
-                    page.get_by_label("Имя пользователя:").fill("admin")
-                    page.get_by_label("Имя пользователя:").press("Tab")
-                    page.get_by_label("Пароль:").fill("Qq12345!")
-                    page.get_by_role("button", name="Войти").click()
-                    page.get_by_role("link", name="Пользователи", exact=True).click()
-                    page.get_by_role("link", name=request.POST['username']).click()
-                    page.get_by_label("Активный").uncheck()
-                    page.get_by_role("button", name="Сохранить", exact=True).click()
-                    page.get_by_role("button", name="Выйти").click()
-
-                    # ---------------------
-                    context.close()
-                    browser.close()
-
                 with sync_playwright() as playwright:
-                    run(playwright)
+                    activity_auto_disactivate(username, playwright)
                 # return render(request, 'transaction/home.html')
 
                 return redirect('home')
@@ -122,6 +76,7 @@ def signupuser(request):
                            'error': 'Пароли не совпали!'})
 
 
+@login_required
 def loginuser(request):
     if request.method == 'GET':
         return render(request, 'transaction/loginuser.html', {'form': AuthenticationForm()})
@@ -520,6 +475,7 @@ def specialcostcalculation(request, pk):
     for item in valuesexp_list:
         value = round(item['quantity'] * item['price'], 2)
         sumexp += value
+
 
     return funcs[int(pk)](request, maxdeltadays, sumpro, sumexp, multidash)
 
