@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'transaction/favicon1.ico' %}">
+</head>
+<body>
+    <div class="menu">
+        <div class="wrap">
+           <a href="{% url 'home' %}">
+                    <img src="{% static 'transaction/logo.jpg' %}" alt="">
+
+                </a>
+        </div>
+    </div>
+<a href="{% url 'home' %}"><h1 style="color: green">{{ message }}</h1></a>
+</body>
+</html>

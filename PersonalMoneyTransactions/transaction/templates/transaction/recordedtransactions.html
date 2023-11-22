@@ -74,7 +74,7 @@
         <p style="color: green">(за период с {{ oldest_of_oldest_dates }} по {{ today }}
             найдено записей: {{ countfiltpro }})</p>
         {% endif %}
-        <p style="color: green">(тип дохода: {{ incom }}, категория расхода: {{ categ }}) </p>
+        <p style="color: green">(тип дохода: {{ incom }}) </p>
         <ul style="color: green">
             {% for protransaction in protransactions %}
             <li style="width: 800px;">
@@ -100,7 +100,7 @@
         <p style="color: red">(за период с {{ oldest_of_oldest_dates }} по {{ today }}
             найдено записей: {{ countfiltexp }})</p>
         {% endif %}
-        <p style="color: red">(тип дохода: {{ incom }}, категория расхода: {{ categ }}) </p>
+        <p style="color: red">(категория расхода: {{ categ }}) </p>
         <ul style="color: red">
             {% for exptransaction in exptransactions %}
             <li style="width: 800px;">

@@ -2,44 +2,6 @@ from django.shortcuts import render
 from .models import ProfitableTransaction, ExpenditureTransaction
 from django.db.models import Sum, F
 from django.utils.safestring import mark_safe
-from playwright.sync_api import Playwright, sync_playwright
-
-def auto_exit(playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True)
-    context = browser.new_context()
-    page = context.new_page()
-    page.goto("http://127.0.0.1:8000/admin/login/?next=/admin/")
-    page.get_by_label("Имя пользователя:").fill("admin")
-    page.get_by_label("Пароль:").click()
-    page.get_by_label("Пароль:").fill("Qq12345!")
-    page.get_by_role("button", name="Войти").click()
-    page.get_by_role("button", name="Выйти").click()
-
-    # ---------------------
-    context.close()
-    browser.close()
-
-
-def activity_auto_disactivate(username, playwright: Playwright) -> None:
-    browser = playwright.chromium.launch(headless=True)
-    context = browser.new_context()
-    page = context.new_page()
-    page.goto("http://127.0.0.1:8000/admin/login/?next=/admin/")
-    page.get_by_label("Имя пользователя:").click()
-    page.get_by_label("Имя пользователя:").fill("admin")
-    page.get_by_label("Имя пользователя:").press("Tab")
-    page.get_by_label("Пароль:").fill("Qq12345!")
-    page.get_by_role("button", name="Войти").click()
-    page.get_by_role("link", name="Пользователи", exact=True).click()
-    page.get_by_role("link", name=username).click()
-    page.get_by_label("Активный").uncheck()
-    page.get_by_role("button", name="Сохранить", exact=True).click()
-    page.get_by_role("button", name="Выйти").click()
-
-    # ---------------------
-    context.close()
-    browser.close()
-
 
 
 def func2(request, maxdeltadays, sumpro, sumexp, multidash):

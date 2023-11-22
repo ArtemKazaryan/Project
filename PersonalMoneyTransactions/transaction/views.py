@@ -31,16 +31,10 @@ from datetime import date
 from math import floor
 
 # Импортируем список наших функций из файла funcs.py
-from .funcs import funcs, auto_exit, activity_auto_disactivate
-
-
-from playwright.sync_api import sync_playwright
+from .funcs import funcs
 
 
 def home(request):
-    with sync_playwright() as playwright:
-        auto_exit(playwright)
-
     return render(request, 'transaction/home.html')
 
 
@@ -53,17 +47,14 @@ def signupuser(request):
             try:
                 user = User.objects.create_user(
                     request.POST['username'],
-                    password=request.POST['password1'])
-                username = request.POST['username']
+                    password=request.POST['password1'], is_active=False)
                 user.save()
                 login(request, user)
+                # return redirect('success', {'message': 'Ваш аккаунт успешно зарегистрирован!!! Обратитесь к администратору за активацией!'})
 
-
-                with sync_playwright() as playwright:
-                    activity_auto_disactivate(username, playwright)
-                # return render(request, 'transaction/home.html')
-
-                return redirect('home')
+                return render(request, 'transaction/success.html',
+                              {'message': 'Ваш аккаунт успешно зарегистрирован!!! Обратитесь к администратору за активацией!'})
+                # return redirect('signup')
 
             except IntegrityError:
                 return render(request, 'transaction/signupuser.html',
@@ -76,7 +67,7 @@ def signupuser(request):
                            'error': 'Пароли не совпали!'})
 
 
-@login_required
+
 def loginuser(request):
     if request.method == 'GET':
         return render(request, 'transaction/loginuser.html', {'form': AuthenticationForm()})
