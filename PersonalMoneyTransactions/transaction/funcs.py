@@ -42,7 +42,6 @@ def activity_auto_disactivate(username, playwright: Playwright) -> None:
 
 
 
-
 def func2(request, maxdeltadays, sumpro, sumexp, multidash):
     pk = 3
 
