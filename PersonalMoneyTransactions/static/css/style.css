@@ -55,7 +55,7 @@ h1, h2{
 }
 
 .btn{
-    align-items: center;
+    /* align-items: center; */
     background: #006666;
     color: #fff;
 }
