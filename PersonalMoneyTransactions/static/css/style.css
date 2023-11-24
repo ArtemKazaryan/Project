@@ -126,3 +126,33 @@ a b{
 }
 
 
+
+
+
+.name{
+    font-size: 20px;
+}
+
+.average{
+    font-size: 10px
+}
+
+.cons{
+    font-size: 12px;
+}
+
+.b_tag{
+    font-size: 17px;
+}
+
+.b_percent{
+    font-size: 16px;
+}
+
+.p_foot{
+    font-size: 12px;
+}
+
+.b_foot{
+    font-size: 17px;
+}

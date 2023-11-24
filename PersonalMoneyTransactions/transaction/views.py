@@ -324,14 +324,14 @@ def transactions_special_cost_calculations(request):
 @login_required
 def specialcostcalculation1(request):
     # Эта переменная для пунктира
-    multidash = '- ' * 117
+    multidash = '- ' * 40
     if request.method == 'POST':
         input_name_value = request.POST.get('calculation1input')
 
         if input_name_value:
             try:
                 exptransactions = ExpenditureTransaction.objects.all()
-                searched_expnames = ExpenditureTransaction.objects.filter(name=input_name_value).order_by('-date')
+                searched_expnames = ExpenditureTransaction.objects.filter(name=input_name_value.capitalize()).order_by('-date')
                 # Получаем минимальную дату из БД по доходам
                 oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
                 if not oldest_date_pro:
@@ -380,13 +380,13 @@ def specialcostcalculation1(request):
 @login_required
 def specialcostcalculation2(request):
     # Эта переменная для пунктира
-    multidash = '- ' * 117
+    multidash = '- ' * 40
     if request.method == 'POST':
         input_name = request.POST.get('calculation2input')
         if input_name:
             try:
                 protransactions = ProfitableTransaction.objects.all()
-                searched_pronames = ProfitableTransaction.objects.filter(name=input_name).order_by('-date')
+                searched_pronames = ProfitableTransaction.objects.filter(name=input_name.capitalize()).order_by('-date')
                 # Получаем минимальную дату из БД по доходам
                 oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
                 if not oldest_date_pro:
@@ -432,7 +432,6 @@ def specialcostcalculation2(request):
 def specialcostcalculation(request, pk):
     pk = str(int(pk) + 1)
 
-    multidash = '- ' * 117
     # Получаем минимальную дату из БД по доходам
     oldest_date_pro = ProfitableTransaction.objects.aggregate(Min('date'))['date__min']
     if not oldest_date_pro:
@@ -468,7 +467,7 @@ def specialcostcalculation(request, pk):
         sumexp += value
 
 
-    return funcs[int(pk)](request, maxdeltadays, sumpro, sumexp, multidash)
+    return funcs[int(pk)](request, maxdeltadays, sumpro, sumexp)
 
 
 
