@@ -36,31 +36,82 @@ from .funcs import funcs
 
 def home(request):
     return render(request, 'transaction/home.html')
-
-
+import string
+# qwerty = list(string.punctuation)
+# for i in range(len(qwerty)):
+#     print(qwerty[i])
+# print(qwerty[0])
+# print(qwerty[1])
 def signupuser(request):
-
+    import string
+    print(string.digits)
+    print(string.ascii_letters)
+    print(string.punctuation)
+    print(string.hexdigits)
+    print(string.printable)
     if request.method == 'GET':
         return render(request, 'transaction/signupuser.html', {'form': UserCreationForm()})
     else:
         if request.POST['password1'] == request.POST['password2']:
-            try:
-                user = User.objects.create_user(
-                    request.POST['username'],
-                    password=request.POST['password1'], is_active=False)
-                user.save()
-                login(request, user)
-                # return redirect('success', {'message': 'Ваш аккаунт успешно зарегистрирован!!! Обратитесь к администратору за активацией!'})
+            if len(request.POST['password1']) >= 8:
+                symbols = request.POST['password1']
+                dig = 0
+                low_let = 0
+                up_let = 0
+                punct = 0
+                whitespace = 1
+                not_lat_let = 1
+                for i in range(len(symbols)):
+                    if symbols[i] in list('0123456789'):
+                        dig += 1
+                    if symbols[i] in list('abcdefghijklmnopqrstuvwxyz'):
+                        low_let += 1
+                    if symbols[i] in list('абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'):
+                        not_lat_let *= 0
+                    if symbols[i] in list('ABCDEFGHIJKLMNOPQRSTUVWXYZАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'):
+                        up_let += 1
+                    if symbols[i] in list(string.punctuation):
+                        punct += 1
+                    if symbols[i] == ' ':
+                        whitespace *= 0
+                err = 'При вводе пароля '
+                if dig == 0:
+                    err += 'Вы не использовали цифры! '
+                if low_let == 0:
+                    err += 'Вы не использовали буквы в нижнем регистре! '
+                if up_let == 0:
+                    err += 'Вы не использовали буквы в верхнем регистре! '
+                if not_lat_let == 0:
+                    err += 'Вы использовали буквы нелатинского алфавиита! '
+                if punct == 0:
+                    err += 'Вы не использовали знаки пунктуации! '
+                if whitespace == 0:
+                    err += 'Использовать пробел запрещено!'
+                include_all_symb_types = dig * low_let * up_let * not_lat_let * punct * whitespace
+                err += 'Ваш пароль не соответствует стандартам валидации! Попробуйте пройти валидацию пароля заново!'
+                if include_all_symb_types != 0:
+                    try:
+                        user = User.objects.create_user(
+                            request.POST['username'],
+                            password=request.POST['password1'], is_active=False)
+                        user.save()
+                        login(request, user)
+                        return render(request, 'transaction/success.html',
+                                      {'message': 'Ваш аккаунт успешно зарегистрирован!!!'
+                                                  ' Обратитесь к администратору за активацией!'})
+                    except IntegrityError:
+                        return render(request, 'transaction/signupuser.html',
+                                      {'form': UserCreationForm(),
+                                       'error': 'Пользователь с таким именем уже существует!'})
+                else:
+                    return render(request, 'transaction/signupuser.html',
+                                  {'form': UserCreationForm(), 'error': err})
 
-                return render(request, 'transaction/success.html',
-                              {'message': 'Ваш аккаунт успешно зарегистрирован!!! Обратитесь к администратору за активацией!'})
-                # return redirect('signup')
 
-            except IntegrityError:
+            else:
                 return render(request, 'transaction/signupuser.html',
                               {'form': UserCreationForm(),
-                               'error': 'Пользователь с таким именем уже существует!'})
-
+                               'error': 'Пароль меньше 8-ми символов!'})
         else:
             return render(request, 'transaction/signupuser.html',
                           {'form': UserCreationForm(),
