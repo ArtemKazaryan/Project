@@ -11,6 +11,13 @@ body{
     box-sizing: border-box;
 }
 
+.wrap1{
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 10px 30px;
+    box-sizing: border-box;
+}
+
 .menu{
     background: #006666;
     box-shadow: 0 2px 12px 2px #006666;
@@ -55,7 +62,7 @@ h1, h2{
 }
 
 .btn{
-    /* align-items: center; */
+    align-items: center;
     background: #006666;
     color: #fff;
 }
@@ -126,33 +133,3 @@ a b{
 }
 
 
-
-
-
-.name{
-    font-size: 20px;
-}
-
-.average{
-    font-size: 10px
-}
-
-.cons{
-    font-size: 12px;
-}
-
-.b_tag{
-    font-size: 17px;
-}
-
-.b_percent{
-    font-size: 16px;
-}
-
-.p_foot{
-    font-size: 12px;
-}
-
-.b_foot{
-    font-size: 17px;
-}

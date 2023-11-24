@@ -1,0 +1,22 @@
+
+    <table>
+      <tr>
+        <th>Категория товара/услуги:</th>
+        <th>Общий расход по категории,руб.:</th>
+        <th>Темп расхода,руб.в день:</th>
+          <th>Темп расхода,руб.в месяц:</th>
+        <th>Доля от общего расхода:</th>
+      </tr>
+        {% for item in queryset %}
+            <tr style="text-align: center;">
+              <td class="name"><b>{{ item.categories }}</b></td>
+              <td><b>{{ item.totalexp | floatformat:2 }}</b></td>
+              <td><b>{{ item.speedexp | floatformat:2 }}</b></td>
+                <td><b>{{ item.speedmonthexp | floatformat:2 }}</b></td>
+              <td class="cons"><b class="b_percent">{{ item.percentexp | floatformat:3 }}</b> %</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p class="p_foot"><b class="b_foot">Суммарный расход по всем категориям = {{ sumexp }} руб. (100%)</b></p>
+    <p class="p_foot"><b class="b_foot">Суммарный темп расхода = {{ overall_speedexp }} руб. в день
+            или {{ overall_speedmonthexp }} руб. в месяц</b></p>

@@ -1,12 +1,57 @@
-{% extends 'transaction/base.html' %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PersonalMoneyTransactions</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'transaction/favicon1.ico' %}">
+</head>
+<body>
+    <div class="menu">
+        <div class="wrap">
+           <a href="{% url 'home' %}">
+                    <img src="{% static 'transaction/logo.jpg' %}" alt="">
+                </a>
+            {% if user.is_authenticated %}
+            <ul>
+                <li><a href="">Пользователь: {{ user.username }}</a></li>
+                <li style="color: transparent">& nbsp;</li>
+                <li><a href="{% url 'createpro' %}">Добавить доход</a></li>
+                <li style="color: transparent">& nbsp;</li>
+                <li><a href="{% url 'createexp' %}">Добавить расход</a></li>
+                <li style="color: transparent">& nbsp;</li>
+                <li><a href="{% url 'recorded' %}">Все проводки</a></li>
+                <li style="color: transparent">& nbsp;</li>
+                <li><a href="{% url 'special_cost_calculations' %}">Таблицы с итоговыми расчётами</a></li>
+                <li style="color: transparent">& nbsp;</li>
+                <li>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn bottom">Выйти</button>
+                    </form>
+                </li>
+            </ul>
+            {% else %}
+            <ul>
+                <li><a href="{% url 'signup' %}">Зарегистрироваться</a></li>
+                <li><a href="{% url 'login' %}">Войти</a></li>
+            </ul>
+            {% endif %}
+        </div>
+    </div>
 
-{% block content %}
+    <h2>{{ error }}</h2>
 
-<h1>Регистрация</h1>
-<form method="post" class="register">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button class="btn">Зарегистрироваться</button>
-</form>
+        <div class="wrap1">
+            <h1>Регистрация</h1>
+                <form method="post" class="register">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn">Зарегистрироваться</button>
+                </form>
 
-{% endblock %}
+        </div>
+
+</body>
+</html>

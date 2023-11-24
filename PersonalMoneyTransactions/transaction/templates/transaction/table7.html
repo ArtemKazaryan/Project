@@ -1,0 +1,56 @@
+
+    <h2> <hr>Доходы по наименованию источников (из таблицы 5):</h2>
+       <table>
+         <tr>
+           <th>Наименование источника дохода:</th>
+           <th>Общий доход по источнику,руб.:</th>
+           <th>Темп дохода,руб.в день:</th>
+              <th>Темп дохода,руб.в месяц:</th>
+           <th>Доля от общего дохода:</th>
+         </tr>
+           {% for item in queryset1 %}
+               <tr style="text-align: center;">
+                 <td class="name"><b>{{ item.name }}</b> <b style="font-size: 15px;">({{ item.incometypes }})</b></td>
+                 <td><b>{{ item.totalpro | floatformat:2 }}</b></td>
+                 <td><b>{{ item.speedpro | floatformat:2 }}</b></td>
+                   <td><b>{{ item.speedmonthpro | floatformat:2 }}</b></td>
+                 <td class="cons"><b class="b_percent">{{ item.percentpro | floatformat:3 }}</b> %</td>
+               </tr>
+           {% endfor %}
+       </table>
+        <p class="p_foot"><b class="b_foot">Суммарный доход по всем наименованиям = {{ sumpro }} руб. (100%)</b></p>
+        <p class="p_foot"><b class="b_foot">Суммарный темп дохода = {{ overall_speedpro }} руб. в день
+            или {{ overall_speedmonthpro }} руб. в месяц</b></p>
+    <h2> </h2>
+
+    <h2> <hr>Расходы по наименованию товаров/услуг (из таблицы 3):</h2>
+
+       <table>
+           <tr>
+               <th>Наименование товара/услуги:</th>
+               <th>Название категории:</th>
+               <th>Общий расход на товар/услугу,руб.:</th>
+               <th>Количество измерителя:</th>
+               <th>Средняя цена закупки товара/услуги:</th>
+               <th>Среднее потребление:</th>
+               <th>Темп расхода,руб.в день:</th>
+               <th>Темп расхода,руб.в месяц:</th>
+               <th>Доля от общего расхода:</th>
+           </tr>
+           {% for item in queryset2 %}
+           <tr style="text-align: center;">
+               <td class="name"><b>{{ item.name }}</b></td>
+               <td>{{ item.categories }}</td>
+               <td><b>{{ item.totalexp | floatformat:2 }}</b></td>
+               <td><b>{{ item.totalquant | floatformat:2 }}</b> {{ item.meter }}</td>
+               <td class="average"><b class="b_tag">{{ item.averpr | floatformat:2 }}</b> руб.за {{ item.meter }}</td>
+               <td class="cons"><b class="b_tag">{{ item.consumptionrate | floatformat:2 }}</b> {{ item.meter }} в день</td>
+               <td><b>{{ item.speedexp | floatformat:2 }}</b></td>
+               <td><b>{{ item.speedmonthexp | floatformat:2 }}</b></td>
+               <td class="cons"><b class="b_percent">{{ item.percentexp | floatformat:3 }}</b> %</td>
+           </tr>
+           {% endfor %}
+       </table>
+        <p class="p_foot"><b class="b_foot">Суммарный расход по всем наименованиям = {{ sumexp }} руб. (100%)</b></p>
+        <p class="p_foot"><b class="b_foot">Суммарный темп расхода = {{ overall_speedexp }} руб. в день
+            или {{ overall_speedmonthexp }} руб. в месяц</b></p>

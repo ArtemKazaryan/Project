@@ -1,0 +1,22 @@
+
+    <table>
+      <tr>
+        <th>Категория источника дохода:</th>
+        <th>Общий доход по категории,руб.:</th>
+        <th>Темп дохода,руб.в день:</th>
+          <th>Темп дохода,руб.в месяц:</th>
+        <th>Доля от общего дохода:</th>
+      </tr>
+        {% for item in queryset %}
+            <tr style="text-align: center;">
+              <td class="name"><b>{{ item.incometypes }}</b></td>
+              <td><b>{{ item.totalpro | floatformat:2 }}</b></td>
+              <td><b>{{ item.speedpro | floatformat:2 }}</b></td>
+                <td><b>{{ item.speedmonthpro | floatformat:2 }}</b></td>
+              <td class="cons"><b class="b_percent">{{ item.percentpro | floatformat:3 }}</b> %</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <p class="p_foot"><b class="b_foot">Суммарный доход по всем категориям = {{ sumpro }} руб. (100%)</b></p>
+    <p class="p_foot"><b class="b_foot">Суммарный темп дохода = {{ overall_speedpro }} руб. в день
+            или {{ overall_speedmonthpro }} руб. в месяц</b></p>
