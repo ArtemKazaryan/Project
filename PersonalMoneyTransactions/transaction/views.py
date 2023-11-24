@@ -39,7 +39,6 @@ def home(request):
 
 
 def signupuser(request):
-
     if request.method == 'GET':
         return render(request, 'transaction/signupuser.html', {'form': UserCreationForm()})
     else:
@@ -97,8 +96,6 @@ def signupuser(request):
                 else:
                     return render(request, 'transaction/signupuser.html',
                                   {'form': UserCreationForm(), 'error': err})
-
-
             else:
                 return render(request, 'transaction/signupuser.html',
                               {'form': UserCreationForm(),
@@ -207,6 +204,23 @@ def recordedtransactions(request):
 
     notempty = True
 
+    # Задаём недельные, месячные, полугодовые и годовые темпы доходов, расходов и баланса(прибыли, накаплений)
+    total_week_pro = round(7 * total_revenue_rate, 2)
+    total_month_pro = round(30.4375 * float(total_revenue_rate), 2)
+    total_halfyear_pro = round(30.4375 * 6 * float(total_revenue_rate), 2)
+    total_year_pro = round(365.25 * float(total_revenue_rate), 2)
+
+    total_week_exp = round(7 * total_expense_rate, 2)
+    total_month_exp = round(30.4375 * float(total_expense_rate), 2)
+    total_halfyear_exp = round(30.4375 * 6 * float(total_expense_rate), 2)
+    total_year_exp = round(365.25 * float(total_expense_rate), 2)
+
+    margin_total_week = round(total_week_pro - total_week_exp, 2)
+    margin_total_month = round(total_month_pro - total_month_exp, 2)
+    margin_total_halfyear = round(total_halfyear_pro - total_halfyear_exp, 2)
+    margin_total_year = round(total_year_pro - total_year_exp, 2)
+
+
     if request.method == 'POST':
         try:
             try:
@@ -253,8 +267,15 @@ def recordedtransactions(request):
                 if not countfiltexp:
                     countfiltexp = 0
 
+
                 # Формируем контекст вывода на страницу
-                context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+                context = {'total_week_pro': total_week_pro, 'total_month_pro': total_month_pro,
+                           'total_halfyear_pro': total_halfyear_pro, 'total_year_pro': total_year_pro,
+                           'total_week_exp': total_week_exp, 'total_month_exp': total_month_exp,
+                           'total_halfyear_exp': total_halfyear_exp, 'total_year_exp': total_year_exp,
+                           'margin_total_week': margin_total_week, 'margin_total_month': margin_total_month,
+                           'margin_total_halfyear': margin_total_halfyear, 'margin_total_year': margin_total_year,
+                           'protransactions': protransactions, 'exptransactions': exptransactions,
                            'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
                            'startday': startday, 'startmonth': startmonth, 'startyear': startyear,
                            'finishday': finishday, 'finishmonth': finishmonth, 'finishyear': finishyear,
@@ -293,7 +314,13 @@ def recordedtransactions(request):
                 countfiltexp = 0
 
             # Формируем контекст вывода на страницу
-            context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+            context = {'total_week_pro': total_week_pro, 'total_month_pro': total_month_pro,
+                       'total_halfyear_pro': total_halfyear_pro, 'total_year_pro': total_year_pro,
+                       'total_week_exp': total_week_exp, 'total_month_exp': total_month_exp,
+                       'total_halfyear_exp': total_halfyear_exp, 'total_year_exp': total_year_exp,
+                       'margin_total_week': margin_total_week, 'margin_total_month': margin_total_month,
+                       'margin_total_halfyear': margin_total_halfyear, 'margin_total_year': margin_total_year,
+                       'protransactions': protransactions, 'exptransactions': exptransactions,
                        'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
                        'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
                        'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
@@ -316,7 +343,13 @@ def recordedtransactions(request):
             if not countfiltexp:
                 countfiltexp = 0
             # Формируем контекст вывода на страницу
-            context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+            context = {'total_week_pro': total_week_pro, 'total_month_pro': total_month_pro,
+                       'total_halfyear_pro': total_halfyear_pro, 'total_year_pro': total_year_pro,
+                       'total_week_exp': total_week_exp, 'total_month_exp': total_month_exp,
+                       'total_halfyear_exp': total_halfyear_exp, 'total_year_exp': total_year_exp,
+                       'margin_total_week': margin_total_week, 'margin_total_month': margin_total_month,
+                       'margin_total_halfyear': margin_total_halfyear, 'margin_total_year': margin_total_year,
+                       'protransactions': protransactions, 'exptransactions': exptransactions,
                        'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
                        'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
                        'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,
@@ -335,7 +368,13 @@ def recordedtransactions(request):
         if not countfiltexp:
             countfiltexp = 0
         # Формируем контекст вывода на страницу
-        context = {'protransactions': protransactions, 'exptransactions': exptransactions,
+        context = {'total_week_pro': total_week_pro, 'total_month_pro': total_month_pro,
+                   'total_halfyear_pro': total_halfyear_pro, 'total_year_pro': total_year_pro,
+                   'total_week_exp': total_week_exp, 'total_month_exp': total_month_exp,
+                   'total_halfyear_exp': total_halfyear_exp, 'total_year_exp': total_year_exp,
+                   'margin_total_week': margin_total_week, 'margin_total_month': margin_total_month,
+                   'margin_total_halfyear': margin_total_halfyear, 'margin_total_year': margin_total_year,
+                   'protransactions': protransactions, 'exptransactions': exptransactions,
                    'countfiltpro': countfiltpro, 'countfiltexp': countfiltexp, 'notempty': notempty,
                    'sumpro': sumpro, 'sumexp': sumexp, 'countpro': countpro, 'countexp': countexp,
                    'total_revenue_rate': total_revenue_rate, 'total_expense_rate': total_expense_rate,

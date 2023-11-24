@@ -9,20 +9,31 @@
         {{ multidash2 }}
         <h2 style="color: green">Общий доход: {{ sumpro }} руб.</h2>
         <h3 style="color: green">Среднесуточный темп общего дохода: {{ total_revenue_rate }} руб. в день</h3>
+        <h3 style="color: green">Средненедельный темп общего дохода: {{ total_week_pro }} руб. в неделю</h3>
+        <h3 style="color: green">Среднемесячный темп общего дохода: {{ total_month_pro }} руб. в месяц</h3>
+        <h3 style="color: green">Среднеполугодовой темп общего дохода: {{ total_halfyear_pro }} руб. в полгода</h3>
+        <h3 style="color: green">Среднегодовой темп общего дохода: {{ total_year_pro }} руб. в год</h3>
         <p style="color: green">(общее число записей: {{ countpro }})</p>
         {{ multidash2 }}
         <h2 style="color: red">Общий расход: {{ sumexp }} руб.</h2>
         <h3 style="color: red">Среднесуточный темп общего расхода: {{ total_expense_rate }} руб. в день</h3>
+        <h3 style="color: red">Средненедельный темп общего расхода: {{ total_week_exp }} руб. в неделю</h3>
+        <h3 style="color: red">Среднемесячный темп общего расхода: {{ total_month_exp }} руб. в месяц</h3>
+        <h3 style="color: red">Среднеполугодовой темп общего расхода: {{ total_halfyear_exp }} руб. в полгода</h3>
+        <h3 style="color: red">Среднегодовой темп общего расхода: {{ total_year_exp }} руб. в год</h3>
         <p style="color: red">(общее число записей: {{ countexp }})</p>
         {{ multidash2}}
         <h2 style="color: orange">Текущая общая прибыль (баланс, запас): {{ total_balance }} руб.</h2>
         <h3 style="color: orange">Среднесуточный темп текущей общей прибыли: {{ margin_total_rate }} руб. в день</h3>
+        <h3 style="color: orange">Средненедельный темп текущей общей прибыли: {{ margin_total_week }} руб. в неделю</h3>
+        <h3 style="color: orange">Среднемесячный темп текущей общей прибыли: {{ margin_total_month }} руб. в месяц</h3>
+        <h3 style="color: orange">Среднеполугодовой темп текущей общей прибыли: {{ margin_total_halfyear }} руб. в полгода</h3>
+        <h3 style="color: orange">Среднегодовой темп текущей общей прибыли: {{ margin_total_year }} руб. в год</h3>
         {{ multidash2 }}
         <h2 style="color: black">Текущий темп расходов=<b style="color: red">{{ total_expense_rate }}руб/день</b>  исчерпает
             запас=<b style="color: orange">{{ total_balance }}руб.</b> за
             срок=<b style="color: green; font-size: 20px;">{{ days_left }}</b><b style="color: green;">дн.</b></h2>
     </form>
-
 
     <form class="bg" method="POST" action="{% url 'recorded' %}" style="width: 880px;">
         {% csrf_token %}
