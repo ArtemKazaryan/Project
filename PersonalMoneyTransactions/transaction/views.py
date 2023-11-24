@@ -32,23 +32,14 @@ from math import floor
 
 # Импортируем список наших функций из файла funcs.py
 from .funcs import funcs
-
+import string
 
 def home(request):
     return render(request, 'transaction/home.html')
-import string
-# qwerty = list(string.punctuation)
-# for i in range(len(qwerty)):
-#     print(qwerty[i])
-# print(qwerty[0])
-# print(qwerty[1])
+
+
 def signupuser(request):
-    import string
-    print(string.digits)
-    print(string.ascii_letters)
-    print(string.punctuation)
-    print(string.hexdigits)
-    print(string.printable)
+
     if request.method == 'GET':
         return render(request, 'transaction/signupuser.html', {'form': UserCreationForm()})
     else:
