@@ -10,7 +10,7 @@
   <button type="submit">Рассчитать</button>
 </form>
 <h1></h1>
-{{ multidash }}
+<hr>
 
 {% if input_name_value %}
 <p><b>{{ input_name_value }}</b> ( ОБЩИЕ РАСХОДЫ: <b>{{ sumpricequantity }}</b> руб.,  КОЛ-ВО:
@@ -18,7 +18,7 @@
   ТЕМП РАСХОДА: <b>{{ speedexp }}</b> руб. в день,  СРЕДНЕЕ ПОТРЕБЛЕНИЕ: <b>{{ consumptionrate }}</b> е.и. в день )</p>
 {% endif %}
 
-{{ multidash }}
+<hr>
 
 {% if searched_expnames %}
     <h2>Детализация:</h2>
